@@ -1,0 +1,13 @@
+{
+  "brand": {
+    "navy": "#25274D",
+    "slate": "#464866",
+    "mist": "#AAABB8",
+    "cyan": "#2E9CCA",
+    "blue": "#29648A"
+  },
+  "neutral": {
+    "white": "#FFFFFF",
+    "black": "#000000"
+  }
+}
