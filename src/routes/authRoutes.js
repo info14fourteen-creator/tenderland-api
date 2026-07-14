@@ -66,7 +66,7 @@ router.post("/register", async (req, res, next) => {
          where code = $1
            and status = 'active'
            and used_at is null
-           and (email is null or lower(email) = lower($2))
+           and lower(email) = lower($2)
            and (expires_at is null or expires_at > now())
          limit 1`,
         [input.inviteCode, input.email]

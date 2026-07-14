@@ -7,7 +7,7 @@ import { query } from "../db.js";
 const router = Router();
 
 const createInvitationSchema = z.object({
-  email: z.string().email().transform((email) => email.toLowerCase()).optional(),
+  email: z.string().email().transform((email) => email.toLowerCase()),
   role: z.enum(["user", "admin"]).default("user"),
   expiresInDays: z.number().int().min(1).max(365).default(14)
 });
@@ -33,7 +33,7 @@ router.post("/invitations", requireAuth, requireAdmin, async (req, res, next) =>
       `insert into invitations (id, email, code, role, created_by, expires_at)
        values ($1, $2, $3, $4, $5, now() + ($6::int * interval '1 day'))
        returning id, email, code, role, status, expires_at, created_at`,
-      [randomUUID(), input.email || null, code, input.role, req.user.id, input.expiresInDays]
+      [randomUUID(), input.email, code, input.role, req.user.id, input.expiresInDays]
     );
 
     return res.status(201).json({ invitation: publicInvitation(rows[0]) });

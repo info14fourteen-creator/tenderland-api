@@ -6,7 +6,8 @@ import { getPool } from "../src/db.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const migrations = [
   "001_create_users.sql",
-  "002_create_invitations.sql"
+  "002_create_invitations.sql",
+  "003_require_invitation_email.sql"
 ];
 
 for (const migration of migrations) {

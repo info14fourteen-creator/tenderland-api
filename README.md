@@ -39,8 +39,8 @@ Content-Type: application/json
 }
 ```
 
-Registration requires an invitation code. The first admin account uses
-`ADMIN_EMAIL` plus `ADMIN_BOOTSTRAP_INVITE_CODE`.
+Registration requires an invitation code tied to the same email address.
+The first admin account uses `ADMIN_EMAIL` plus `ADMIN_BOOTSTRAP_INVITE_CODE`.
 
 ### Login
 
@@ -74,3 +74,5 @@ Content-Type: application/json
   "expiresInDays": 14
 }
 ```
+
+The returned invite code can only be used with the email it was created for.
