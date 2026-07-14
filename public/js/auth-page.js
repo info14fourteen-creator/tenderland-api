@@ -7,6 +7,7 @@
   const registerForm = document.querySelector('[data-auth-panel="register"]');
   const forgotButton = document.querySelector("[data-forgot-password]");
   const cornerAnimations = new Map();
+  const footerLottie = document.querySelector("[data-footer-lottie]");
 
   function syncCornerAnimation(mode) {
     cornerAnimations.forEach(({ animation, target }, animationMode) => {
@@ -80,6 +81,11 @@
     if (animation) {
       cornerAnimations.set(target.dataset.authCornerLottie, { animation, target });
     }
+  });
+
+  window.TenderlandLottie?.mount(footerLottie, {
+    autoplay: true,
+    loop: true
   });
 
   loginForm.addEventListener("submit", async (event) => {

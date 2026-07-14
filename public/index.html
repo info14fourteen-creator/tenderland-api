@@ -4,93 +4,121 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kortex Capital</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="/styles/auth.css">
   </head>
   <body>
-    <main class="auth-page">
-      <section class="auth-card" aria-label="Авторизация">
-        <div class="corner-lottie" aria-hidden="true">
-          <span
-            class="corner-lottie-item is-active"
-            data-auth-corner-lottie="login"
-            data-lottie-path="/assets/login-animation.json"
-          ></span>
-          <span
-            class="corner-lottie-item"
-            data-auth-corner-lottie="register"
-            data-lottie-path="/assets/register-button-animation.json"
-          ></span>
-        </div>
+    <div class="app-shell">
+      <header class="site-header" aria-label="Шапка сайта">
+        <a class="site-logo" href="/" aria-label="Kortex Capital">
+          <img src="/assets/logo_text_header.svg" alt="Kortex Capital">
+        </a>
+      </header>
 
-        <div class="auth-brand">
-          <img src="/assets/logo_text_25274D_464866.svg" alt="Kortex Capital">
-        </div>
-
-        <div class="auth-tabs" role="tablist" aria-label="Режим авторизации">
-          <button class="auth-tab is-active" type="button" data-auth-mode="login" role="tab" aria-selected="true">
-            Вход
-          </button>
-          <button class="auth-tab" type="button" data-auth-mode="register" role="tab" aria-selected="false">
-            Регистрация
-          </button>
-        </div>
-
-        <form class="auth-form" data-auth-panel="login" novalidate>
-          <label class="field">
-            <span>Почта</span>
-            <input name="email" type="email" autocomplete="email" placeholder="admin@kortex.capital" required>
-          </label>
-
-          <label class="field">
-            <span>Пароль</span>
-            <input name="password" type="password" autocomplete="current-password" placeholder="Пароль" required>
-          </label>
-
-          <div class="auth-row">
-            <label class="remember">
-              <input name="remember" type="checkbox">
-              <span>Запомнить на этом устройстве</span>
-            </label>
+      <main class="auth-page">
+        <section class="auth-card" aria-label="Авторизация">
+          <div class="corner-lottie" aria-hidden="true">
+            <span
+              class="corner-lottie-item is-active"
+              data-auth-corner-lottie="login"
+              data-lottie-path="/assets/login-animation.json"
+            ></span>
+            <span
+              class="corner-lottie-item"
+              data-auth-corner-lottie="register"
+              data-lottie-path="/assets/register-button-animation.json"
+            ></span>
           </div>
 
-          <button class="primary-button" type="submit">
-            <span>Войти</span>
-          </button>
+          <div class="auth-tabs" role="tablist" aria-label="Режим авторизации">
+            <button class="auth-tab is-active" type="button" data-auth-mode="login" role="tab" aria-selected="true">
+              Вход
+            </button>
+            <button class="auth-tab" type="button" data-auth-mode="register" role="tab" aria-selected="false">
+              Регистрация
+            </button>
+          </div>
 
-          <button class="link-button forgot-link" type="button" data-forgot-password>
-            Забыли пароль?
-          </button>
-        </form>
+          <form class="auth-form" data-auth-panel="login" novalidate>
+            <label class="field">
+              <span>Почта</span>
+              <input name="email" type="email" autocomplete="email" placeholder="admin@kortex.capital" required>
+            </label>
 
-        <form class="auth-form is-hidden" data-auth-panel="register" novalidate>
-          <label class="field">
-            <span>Почта</span>
-            <input name="email" type="email" autocomplete="email" placeholder="почта@компания.ру" required>
-          </label>
+            <label class="field">
+              <span>Пароль</span>
+              <input name="password" type="password" autocomplete="current-password" placeholder="Пароль" required>
+            </label>
 
-          <label class="field">
-            <span>Пароль</span>
-            <input name="password" type="password" autocomplete="new-password" placeholder="Минимум 8 символов" required>
-          </label>
+            <div class="auth-row">
+              <label class="remember">
+                <input name="remember" type="checkbox">
+                <span>Запомнить на этом устройстве</span>
+              </label>
+            </div>
 
-          <label class="field">
-            <span>Повторите пароль</span>
-            <input name="passwordConfirm" type="password" autocomplete="new-password" placeholder="Ещё раз пароль" required>
-          </label>
+            <button class="primary-button" type="submit">
+              <span>Войти</span>
+            </button>
 
-          <label class="field">
-            <span>Код приглашения</span>
-            <input name="inviteCode" type="text" autocomplete="one-time-code" placeholder="Код приглашения" required>
-          </label>
+            <button class="link-button forgot-link" type="button" data-forgot-password>
+              Забыли пароль?
+            </button>
+          </form>
 
-          <button class="primary-button" type="submit">
-            <span>Зарегистрироваться</span>
-          </button>
-        </form>
+          <form class="auth-form is-hidden" data-auth-panel="register" novalidate>
+            <label class="field">
+              <span>Почта</span>
+              <input name="email" type="email" autocomplete="email" placeholder="почта@компания.ру" required>
+            </label>
 
-        <p class="auth-status" role="status" aria-live="polite"></p>
-      </section>
-    </main>
+            <label class="field">
+              <span>Пароль</span>
+              <input name="password" type="password" autocomplete="new-password" placeholder="Минимум 8 символов" required>
+            </label>
+
+            <label class="field">
+              <span>Повторите пароль</span>
+              <input name="passwordConfirm" type="password" autocomplete="new-password" placeholder="Ещё раз пароль" required>
+            </label>
+
+            <label class="field">
+              <span>Код приглашения</span>
+              <input name="inviteCode" type="text" autocomplete="one-time-code" placeholder="Код приглашения" required>
+            </label>
+
+            <button class="primary-button" type="submit">
+              <span>Зарегистрироваться</span>
+            </button>
+          </form>
+
+          <p class="auth-status" role="status" aria-live="polite"></p>
+        </section>
+      </main>
+
+      <footer class="site-footer" aria-label="Реквизиты компании">
+        <div class="footer-inner">
+          <div class="footer-copy">
+            <span
+              class="footer-lottie"
+              data-footer-lottie
+              data-lottie-path="/assets/copyright-animation.json"
+              aria-hidden="true"
+            ></span>
+            <span>2026 АО "КОРТЕКС КАПИТАЛ"</span>
+          </div>
+          <div class="footer-details">
+            <span>Полное наименование АКЦИОНЕРНОЕ ОБЩЕСТВО "КОРТЕКС КАПИТАЛ"</span>
+            <span>Краткое наименование АО "КОРТЕКС КАПИТАЛ"</span>
+            <span>ОГРН 1257700248409</span>
+            <span>ИНН 9727107867</span>
+            <span>КПП 772701001</span>
+            <a href="tel:+79319911919">+79319911919</a>
+            <a href="mailto:info@kortex.capital">info@kortex.capital</a>
+          </div>
+        </div>
+      </footer>
+    </div>
 
     <script src="/vendor/lottie.min.js"></script>
     <script src="/js/lottie-loader.js"></script>

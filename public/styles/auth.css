@@ -29,18 +29,45 @@ input {
   font: inherit;
 }
 
-.auth-page {
+.app-shell {
   min-height: 100vh;
   display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--color-brand-navy);
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px 32px 8px;
+  background: var(--color-brand-navy);
+}
+
+.site-logo {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-white);
+}
+
+.site-logo img {
+  display: block;
+  width: 146px;
+  height: 68px;
+  object-fit: contain;
+}
+
+.auth-page {
+  display: grid;
   place-items: center;
-  padding: 24px;
+  padding: 18px 24px 28px;
   background: var(--color-brand-navy);
 }
 
 .auth-card {
   position: relative;
   width: min(100%, 470px);
-  min-height: 672px;
+  min-height: 622px;
   padding: 30px;
   border: 2px solid var(--color-brand-mist);
   border-radius: 8px;
@@ -52,16 +79,13 @@ input {
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 46px;
-  height: 46px;
-  border: 2px solid var(--color-brand-cyan);
-  border-radius: 8px;
-  background: var(--color-white);
+  width: 40px;
+  height: 40px;
 }
 
 .corner-lottie-item {
   position: absolute;
-  inset: 4px;
+  inset: 0;
   visibility: hidden;
 }
 
@@ -69,27 +93,12 @@ input {
   visibility: visible;
 }
 
-.auth-brand {
-  display: grid;
-  place-items: center;
-  min-height: 70px;
-  margin: 0 auto 12px;
-  color: var(--color-brand-navy);
-}
-
-.auth-brand img {
-  display: block;
-  width: 174px;
-  height: 70px;
-  object-fit: contain;
-}
-
 .auth-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4px;
   padding: 4px;
-  margin-bottom: 24px;
+  margin: 32px 0 24px;
   border: 2px solid var(--color-brand-mist);
   border-radius: 8px;
   background: var(--color-white);
@@ -236,20 +245,81 @@ input {
   margin-top: -4px;
 }
 
+.site-footer {
+  background: var(--color-brand-navy);
+  color: var(--color-brand-mist);
+}
+
+.footer-inner {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+  padding: 14px 32px 24px;
+  border-top: 2px solid var(--color-brand-slate);
+}
+
+.footer-copy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--color-white);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.footer-lottie {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+.footer-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  color: var(--color-brand-mist);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.footer-details a {
+  color: var(--color-white);
+  text-decoration: none;
+}
+
 @media (max-width: 440px) {
+  .site-header {
+    padding: 18px 16px 8px;
+  }
+
+  .site-logo img {
+    width: 130px;
+    height: 60px;
+  }
+
   .auth-page {
     padding: 16px;
   }
 
   .auth-card {
-    min-height: 660px;
+    min-height: 606px;
     padding: 24px;
     box-shadow: 8px 8px 0 var(--color-brand-slate);
+  }
+
+  .auth-tabs {
+    margin-top: 28px;
   }
 
   .auth-row {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .footer-inner {
+    padding: 12px 16px 20px;
   }
 }
 
