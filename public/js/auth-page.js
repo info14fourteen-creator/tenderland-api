@@ -6,8 +6,28 @@
   const loginForm = document.querySelector('[data-auth-panel="login"]');
   const registerForm = document.querySelector('[data-auth-panel="register"]');
   const forgotButton = document.querySelector("[data-forgot-password]");
+  const tabAnimations = new Map();
 
-  window.TenderlandLottie?.mountAll();
+  document.querySelectorAll("[data-auth-tab-lottie]").forEach((target) => {
+    const animation = window.TenderlandLottie?.mount(target, {
+      autoplay: false,
+      loop: true
+    });
+
+    if (animation) {
+      tabAnimations.set(target.dataset.authTabLottie, animation);
+    }
+  });
+
+  function syncTabAnimations(mode) {
+    tabAnimations.forEach((animation, animationMode) => {
+      if (animationMode === mode) {
+        animation.play();
+      } else {
+        animation.goToAndStop(0, true);
+      }
+    });
+  }
 
   function setStatus(message, isError = false) {
     status.textContent = message;
@@ -30,6 +50,7 @@
       panel.classList.toggle("is-hidden", panel.dataset.authPanel !== mode);
     });
 
+    syncTabAnimations(mode);
     setStatus("");
   }
 
@@ -149,4 +170,6 @@
       setStatus("Введите корректную почту.", true);
     }
   });
+
+  setMode("login");
 })();

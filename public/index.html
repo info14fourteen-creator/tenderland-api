@@ -13,10 +13,22 @@
 
         <div class="auth-tabs" role="tablist" aria-label="Режим авторизации">
           <button class="auth-tab is-active" type="button" data-auth-mode="login" role="tab" aria-selected="true">
-            Вход
+            <span>Вход</span>
+            <span
+              class="tab-lottie"
+              data-auth-tab-lottie="login"
+              data-lottie-path="/assets/login-animation.json"
+              aria-hidden="true"
+            ></span>
           </button>
           <button class="auth-tab" type="button" data-auth-mode="register" role="tab" aria-selected="false">
-            Регистрация
+            <span>Регистрация</span>
+            <span
+              class="tab-lottie"
+              data-auth-tab-lottie="register"
+              data-lottie-path="/assets/register-button-animation.json"
+              aria-hidden="true"
+            ></span>
           </button>
         </div>
 
@@ -39,11 +51,6 @@
           </div>
 
           <button class="primary-button" type="submit">
-            <span
-              class="button-lottie"
-              data-lottie-path="/assets/login-animation.json"
-              aria-hidden="true"
-            ></span>
             <span>Войти</span>
           </button>
 
@@ -55,7 +62,7 @@
         <form class="auth-form is-hidden" data-auth-panel="register" novalidate>
           <label class="field">
             <span>Почта</span>
-            <input name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+            <input name="email" type="email" autocomplete="email" placeholder="почта@компания.ру" required>
           </label>
 
           <label class="field">
@@ -70,15 +77,10 @@
 
           <label class="field">
             <span>Код приглашения</span>
-            <input name="inviteCode" type="text" autocomplete="one-time-code" placeholder="Invite code" required>
+            <input name="inviteCode" type="text" autocomplete="one-time-code" placeholder="Код приглашения" required>
           </label>
 
           <button class="primary-button" type="submit">
-            <span
-              class="button-lottie"
-              data-lottie-path="/assets/register-button-animation.json"
-              aria-hidden="true"
-            ></span>
             <span>Зарегистрироваться</span>
           </button>
         </form>
