@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { Router } from "express";
 import { z } from "zod";
-import { defaultBusinessRole } from "../access.js";
+import { defaultBusinessRoles, primaryBusinessRole } from "../access.js";
 import { config } from "../config.js";
 import { requireAuth, signUserToken } from "../auth.js";
 import { getPool, query } from "../db.js";
@@ -36,6 +36,7 @@ function publicUser(user) {
     fullName: user.full_name,
     category: user.category,
     role: user.business_role,
+    roles: user.business_roles,
     status: user.status,
     createdAt: user.created_at,
     updatedAt: user.updated_at,
@@ -57,15 +58,15 @@ router.post("/register", async (req, res, next) => {
     await client.query("begin");
 
     let category = "user";
-    let businessRole = defaultBusinessRole;
+    let businessRoles = defaultBusinessRoles;
     let invitationId = null;
 
     if (isAdminBootstrap) {
       category = "super_admin";
-      businessRole = defaultBusinessRole;
+      businessRoles = defaultBusinessRoles;
     } else {
       const invitation = await client.query(
-        `select id, category, business_role
+        `select id, category, business_roles
          from invitations
          where code = $1
            and status = 'active'
@@ -83,15 +84,16 @@ router.post("/register", async (req, res, next) => {
 
       invitationId = invitation.rows[0].id;
       category = invitation.rows[0].category;
-      businessRole = invitation.rows[0].business_role;
+      businessRoles = invitation.rows[0].business_roles;
     }
 
     const userId = randomUUID();
+    const businessRole = primaryBusinessRole(businessRoles);
     const { rows } = await client.query(
-      `insert into users (id, email, password_hash, full_name, category, business_role, role)
-       values ($1, $2, $3, $4, $5, $6, case when $5 = 'super_admin' then 'admin' when $5 = 'admin' then 'admin' else 'user' end)
-       returning id, email, full_name, category, business_role, status, created_at, updated_at, last_login_at`,
-      [userId, input.email, passwordHash, input.fullName || null, category, businessRole]
+      `insert into users (id, email, password_hash, full_name, category, business_role, business_roles, role)
+       values ($1, $2, $3, $4, $5, $6, $7, case when $5 = 'super_admin' then 'admin' when $5 = 'admin' then 'admin' else 'user' end)
+       returning id, email, full_name, category, business_role, business_roles, status, created_at, updated_at, last_login_at`,
+      [userId, input.email, passwordHash, input.fullName || null, category, businessRole, businessRoles]
     );
 
     if (invitationId) {
@@ -126,7 +128,7 @@ router.post("/login", async (req, res, next) => {
   try {
     const input = loginSchema.parse(req.body);
     const { rows } = await query(
-      `select id, email, password_hash, full_name, category, business_role, status, created_at, updated_at, last_login_at
+      `select id, email, password_hash, full_name, category, business_role, business_roles, status, created_at, updated_at, last_login_at
        from users
        where lower(email) = lower($1)
        limit 1`,
@@ -146,7 +148,7 @@ router.post("/login", async (req, res, next) => {
       `update users
        set last_login_at = now()
        where id = $1
-       returning id, email, full_name, category, business_role, status, created_at, updated_at, last_login_at`,
+       returning id, email, full_name, category, business_role, business_roles, status, created_at, updated_at, last_login_at`,
       [user.id]
     );
 

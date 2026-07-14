@@ -10,7 +10,8 @@ export function signUserToken(user) {
       sub: user.id,
       email: user.email,
       category: user.category,
-      role: user.business_role
+      role: user.business_role,
+      roles: user.business_roles
     },
     config.jwtSecret,
     { expiresIn: config.jwtExpiresIn }
@@ -30,7 +31,7 @@ export async function requireAuth(req, res, next) {
 
     const payload = jwt.verify(token, config.jwtSecret);
     const { rows } = await query(
-      `select id, email, full_name, category, business_role, status, created_at, updated_at, last_login_at
+      `select id, email, full_name, category, business_role, business_roles, status, created_at, updated_at, last_login_at
        from users
        where id = $1 and status = 'active'`,
       [payload.sub]

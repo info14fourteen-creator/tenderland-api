@@ -14,3 +14,9 @@ export const businessRoles = [
 ];
 
 export const defaultBusinessRole = "Менеджер";
+
+export const defaultBusinessRoles = [...businessRoles];
+
+export function primaryBusinessRole(roles = defaultBusinessRoles) {
+  return roles.includes(defaultBusinessRole) ? defaultBusinessRole : roles[0] || defaultBusinessRole;
+}

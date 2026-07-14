@@ -25,7 +25,7 @@ npm run dev
 
 ## Auth API
 
-Users have a separate access category and business role.
+Users have a separate access category and business roles.
 
 Access categories:
 
@@ -33,7 +33,7 @@ Access categories:
 - `admin`
 - `super_admin`
 
-Business roles:
+Business roles can be combined. A single person usually starts with every role, then company-specific delegation can remove roles in that company's context later.
 
 - `Менеджер`
 - `Специалист по работе с государственным сегментом`
@@ -92,10 +92,14 @@ Content-Type: application/json
 {
   "email": "user@example.com",
   "category": "user",
-  "role": "Менеджер",
+  "roles": [
+    "Менеджер",
+    "Специалист отдела продаж"
+  ],
   "expiresInDays": 14
 }
 ```
 
 The returned invite code can only be used with the email it was created for.
 Only `super_admin` can create invitations for `admin` and `super_admin` categories.
+If `roles` is omitted, the invitation grants all business roles by default. The legacy `role` field is still accepted for a single-role invitation.
