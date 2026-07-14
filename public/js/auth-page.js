@@ -147,7 +147,7 @@
     try {
       const payload = await requestJson("/api/auth/login", { email, password });
       storeSession(payload.token, formData.get("remember") === "on");
-      setStatus("Вход выполнен.");
+      window.location.assign("/home");
     } catch (error) {
       setStatus(error.message === "INVALID_CREDENTIALS" ? "Неверная почта или пароль." : "Не удалось войти.", true);
     } finally {

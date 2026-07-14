@@ -27,8 +27,7 @@
 
 .site-header-inner,
 .footer-inner {
-  width: min(100%, 1120px);
-  margin: 0 auto;
+  width: 100%;
 }
 
 .site-logo {
