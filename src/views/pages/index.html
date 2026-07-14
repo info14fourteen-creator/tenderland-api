@@ -34,7 +34,7 @@
               <input name="password" type="password" autocomplete="current-password" placeholder="Пароль" required>
             </label>
 
-            <div class="auth-row">
+            <div class="auth-choice-slot">
               <label class="remember">
                 <input name="remember" type="checkbox">
                 <span>Запомнить на этом устройстве</span>
@@ -61,15 +61,17 @@
               <input name="inviteCode" type="text" autocomplete="one-time-code" placeholder="Код приглашения" required>
             </label>
 
-            <label class="consent">
-              <input name="acceptedTerms" type="checkbox" required>
-              <span>
-                Ознакомлен(а) и согласен(на) с
-                <a href="/terms" target="_blank" rel="noopener">условиями работы</a>
-                и
-                <a href="/privacy" target="_blank" rel="noopener">политикой конфиденциальности</a>
-              </span>
-            </label>
+            <div class="auth-choice-slot">
+              <label class="consent">
+                <input name="acceptedTerms" type="checkbox" required>
+                <span>
+                  Ознакомлен(а) и согласен(на) с
+                  <a href="/terms" target="_blank" rel="noopener">условиями работы</a>
+                  и
+                  <a href="/privacy" target="_blank" rel="noopener">политикой конфиденциальности</a>
+                </span>
+              </label>
+            </div>
 
             <button class="primary-button" type="submit">
               <span>Зарегистрироваться</span>
