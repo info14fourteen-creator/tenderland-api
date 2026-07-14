@@ -44,12 +44,13 @@ body {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .home-page {
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     min-height: 480px;
   }
 
+  .home-panel-left,
   .home-panel-right {
     display: none;
   }
