@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kortex Capital — мини-брендбук логотипа</title>
+  <style>
+    :root{--navy:#25274D;--slate:#464866;--silver:#AAABB8;--cyan:#2E9CCA;--blue:#29648A;--white:#FFFFFF;--black:#000000}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--white);color:var(--navy);font-family:Inter,Arial,sans-serif;line-height:1.5}
+    header{background:var(--navy);color:var(--white);padding:64px max(24px,calc((100vw - 1180px)/2)) 72px}
+    header img{display:block;width:200px;height:auto;margin-bottom:42px}
+    h1{font-size:clamp(42px,7vw,82px);line-height:.98;letter-spacing:-.055em;margin:0;max-width:780px}
+    header p{font-size:18px;max-width:650px;margin:26px 0 0;color:var(--silver)}
+    nav{display:flex;gap:20px;flex-wrap:wrap;margin-top:38px}
+    nav a{color:var(--white);text-decoration:none;border-bottom:2px solid var(--cyan);padding-bottom:3px;font-size:14px}
+    main{max-width:1180px;margin:auto;padding:72px 24px 96px}
+    section{margin-top:92px}
+    section:first-child{margin-top:0}
+    h2{font-size:clamp(30px,4vw,48px);letter-spacing:-.04em;line-height:1.05;margin:0 0 18px}
+    h3{font-size:20px;margin:0 0 12px}
+    p{max-width:760px}
+    .lead{font-size:20px;color:var(--slate)}
+    .palette{display:grid;grid-template-columns:repeat(7,1fr);border:2px solid var(--navy);margin-top:36px}
+    .swatch{min-height:190px;padding:18px 12px;display:flex;flex-direction:column;justify-content:flex-end;font-size:13px;font-weight:700}
+    .swatch span{display:block;font-weight:400;margin-top:2px}
+    .c-navy{background:var(--navy);color:var(--white)}.c-slate{background:var(--slate);color:var(--white)}
+    .c-silver{background:var(--silver);color:var(--black)}.c-cyan{background:var(--cyan);color:var(--black)}
+    .c-blue{background:var(--blue);color:var(--white)}.c-white{background:var(--white);color:var(--black)}
+    .c-black{background:var(--black);color:var(--white)}
+    .preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:2px solid var(--navy)}
+    .preview{min-height:340px;padding:46px;display:grid;place-items:center;border:1px solid var(--navy)}
+    .preview img{display:block;width:min(100%,360px);height:230px;object-fit:contain}
+    .preview figcaption{width:100%;font-size:13px;font-weight:700;margin-top:18px}
+    .preview.light{background:var(--white);color:var(--navy)}
+    .preview.dark{background:var(--navy);color:var(--white);border-color:var(--silver)}
+    .variant-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:2px solid var(--navy);margin-top:34px}
+    .variant{margin:0;min-height:260px;padding:28px;border:1px solid var(--navy);display:flex;flex-direction:column;justify-content:space-between}
+    .variant img{width:100%;height:175px;object-fit:contain}
+    .variant figcaption{font-size:13px;font-weight:700}
+    .on-dark{background:var(--navy);color:var(--white);border-color:var(--silver)}
+    .rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;background:var(--navy);border:2px solid var(--navy);margin-top:36px}
+    .rule{background:var(--white);padding:34px}
+    .rule.dark{background:var(--slate);color:var(--white)}
+    .tag{display:inline-block;background:var(--cyan);color:var(--black);padding:5px 9px;font-size:12px;font-weight:800;margin-bottom:20px}
+    .tag.no{background:var(--black);color:var(--white)}
+    ul{padding-left:20px;margin-bottom:0} li+li{margin-top:9px}
+    .clearspace{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--navy);border:2px solid var(--navy);margin-top:36px}
+    .space-demo{background:var(--white);padding:58px;display:grid;place-items:center;position:relative}
+    .space-demo img{width:190px;height:154px;object-fit:contain;outline:2px solid var(--cyan);outline-offset:28px}
+    .space-copy{background:var(--navy);color:var(--white);padding:42px}
+    .space-copy p{color:var(--silver)}
+    footer{background:var(--black);color:var(--white);padding:34px max(24px,calc((100vw - 1180px)/2));font-size:13px}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    @media(max-width:850px){.palette{grid-template-columns:repeat(2,1fr)}.swatch:last-child{grid-column:1/-1}.variant-grid{grid-template-columns:1fr 1fr}.preview-grid,.clearspace{grid-template-columns:1fr}}
+    @media(max-width:560px){header{padding-top:42px}.variant-grid,.rules{grid-template-columns:1fr}.preview,.variant{min-height:230px;padding:24px}.preview img,.variant img{height:150px}.palette{grid-template-columns:1fr}.swatch:last-child{grid-column:auto}}
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logos/kortex-lockup-FFFFFF-AAABB8.svg" alt="Kortex Capital">
+    <h1>Система цвета логотипа</h1>
+    <p>Мини-брендбук фиксирует допустимые цветовые версии знака и логотипа, выбор фона, сочетания и ограничения. Палитра закрытая: никаких дополнительных цветов и градиентов.</p>
+    <nav><a href="#palette">Палитра</a><a href="#primary">Основные версии</a><a href="#variants">Все цвета</a><a href="#rules">Правила</a><a href="#dont">Запреты</a></nav>
+  </header>
+  <main>
+    <section id="palette">
+      <h2>Закреплённая палитра</h2>
+      <p class="lead">Семь точных значений. Цвета не осветляются, не затемняются и не смешиваются.</p>
+      <div class="palette">
+        <div class="swatch c-navy">Kortex Navy<span>#25274D</span></div><div class="swatch c-slate">Slate<span>#464866</span></div>
+        <div class="swatch c-silver">Silver<span>#AAABB8</span></div><div class="swatch c-cyan">Cyan<span>#2E9CCA</span></div>
+        <div class="swatch c-blue">Blue<span>#29648A</span></div><div class="swatch c-white">White<span>#FFFFFF</span></div>
+        <div class="swatch c-black">Black<span>#000000</span></div>
+      </div>
+    </section>
+
+    <section id="primary">
+      <h2>Основные версии</h2>
+      <p class="lead">Для большинства носителей достаточно двух версий. Они создают стабильный и узнаваемый образ бренда.</p>
+      <div class="preview-grid">
+        <figure class="preview light"><img src="logos/kortex-lockup-25274D-AAABB8.svg" alt="Тёмно-синий логотип на белом фоне"><figcaption>#25274D + #AAABB8 на #FFFFFF</figcaption></figure>
+        <figure class="preview dark"><img src="logos/kortex-lockup-FFFFFF-2E9CCA.svg" alt="Белый логотип на тёмно-синем фоне"><figcaption>#FFFFFF + #2E9CCA на #25274D</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="variants">
+      <h2>Монохромные варианты</h2>
+      <p class="lead">Каждый закреплённый цвет применён к логотипу. Выбор версии определяется контрастом с фоном, а не декоративным эффектом.</p>
+      <div class="variant-grid">
+        <figure class="variant"><img src="logos/kortex-lockup-25274D.svg" alt="Логотип #25274D"><figcaption>#25274D · основной на светлом</figcaption></figure>
+        <figure class="variant"><img src="logos/kortex-lockup-464866.svg" alt="Логотип #464866"><figcaption>#464866 · вторичный на светлом</figcaption></figure>
+        <figure class="variant"><img src="logos/kortex-lockup-AAABB8.svg" alt="Логотип #AAABB8"><figcaption>#AAABB8 · крупный формат на тёмном</figcaption></figure>
+        <figure class="variant"><img src="logos/kortex-lockup-2E9CCA.svg" alt="Логотип #2E9CCA"><figcaption>#2E9CCA · акцент на тёмном</figcaption></figure>
+        <figure class="variant"><img src="logos/kortex-lockup-29648A.svg" alt="Логотип #29648A"><figcaption>#29648A · поддерживающий на светлом</figcaption></figure>
+        <figure class="variant on-dark"><img src="logos/kortex-lockup-FFFFFF.svg" alt="Белый логотип"><figcaption>#FFFFFF · инверсия на тёмном</figcaption></figure>
+        <figure class="variant"><img src="logos/kortex-lockup-000000.svg" alt="Чёрный логотип"><figcaption>#000000 · техническая печать</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="rules">
+      <h2>Где какой цвет использовать</h2>
+      <div class="rules">
+        <article class="rule"><span class="tag">ОСНОВА</span><h3>#25274D</h3><p>Главный корпоративный цвет логотипа на белом фоне. Предпочтителен для сайта, документов, презентаций и деловых материалов.</p></article>
+        <article class="rule dark"><span class="tag">ИНВЕРСИЯ</span><h3>#FFFFFF</h3><p>Основная версия для фонов #25274D, #464866, #29648A и #000000. Разделитель может быть #2E9CCA или #AAABB8.</p></article>
+        <article class="rule"><span class="tag">АКЦЕНТ</span><h3>#2E9CCA</h3><p>Цвет разделителя и акцентного знака на #25274D или #000000. Не заменяет основной корпоративный цвет в официальных материалах.</p></article>
+        <article class="rule"><span class="tag">ПОДДЕРЖКА</span><h3>#464866 · #AAABB8 · #29648A</h3><p>Вторичные версии для специальных носителей. #AAABB8 требует тёмного фона; #464866 и #29648A — белого.</p></article>
+        <article class="rule"><span class="tag">ТЕХНИЧЕСКИЙ</span><h3>#000000</h3><p>Только для одноцветной печати, факса, тиснения или случаев, где фирменный цвет технически недоступен.</p></article>
+        <article class="rule"><span class="tag">ФОН</span><h3>#FFFFFF</h3><p>Базовый светлый фон. На нём предпочтительны #25274D, #464866, #29648A и #000000; #AAABB8 — только при крупном размере.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Свободное поле и размер</h2>
+      <div class="clearspace">
+        <div class="space-demo"><img src="logos/kortex-mark-25274D.svg" alt="Знак с защитным полем"></div>
+        <div class="space-copy"><h3>Защитное поле</h3><p>Оставляйте вокруг знака не меньше диаметра одной крайней точки. Внутри этой зоны не размещаются текст, рамки, фотографии и другие знаки.</p><h3>Минимальный размер</h3><p>Знак: 24 px на экране или 8 мм в печати. Полный логотип: 120 px или 32 мм. Ниже этих размеров используйте только знак.</p></div>
+      </div>
+    </section>
+
+    <section id="dont">
+      <h2>Недопустимо</h2>
+      <div class="rules">
+        <article class="rule"><span class="tag no">НЕТ</span><h3>Новые цвета</h3><ul><li>любые оттенки вне семи кодов;</li><li>прозрачность и режимы наложения;</li><li>градиенты, свечение и цветные тени.</li></ul></article>
+        <article class="rule"><span class="tag no">НЕТ</span><h3>Нарушение формы</h3><ul><li>растягивание и сжатие;</li><li>поворот или перестановка элементов;</li><li>изменение толщины линий и расстояний.</li></ul></article>
+        <article class="rule"><span class="tag no">НЕТ</span><h3>Слабый контраст</h3><ul><li>#AAABB8 на #FFFFFF;</li><li>#29648A на #25274D;</li><li>#464866 на #25274D;</li><li>#000000 на #25274D.</li></ul></article>
+        <article class="rule"><span class="tag no">НЕТ</span><h3>Шумный фон</h3><ul><li>логотип поверх фотографии без чистого поля;</li><li>фон, пересекающий контуры знака;</li><li>рамка, касающаяся защитного поля.</li></ul></article>
+      </div>
+    </section>
+  </main>
+  <footer>Kortex Capital · Logo color system · Палитра: #25274D · #464866 · #AAABB8 · #2E9CCA · #29648A · #FFFFFF · #000000</footer>
+</body>
+</html>
