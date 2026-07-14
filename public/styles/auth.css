@@ -288,10 +288,23 @@ input {
 }
 
 .footer-legal strong,
-.footer-address a {
+.footer-contact-link {
   color: var(--color-white);
   font-weight: 900;
   text-decoration: none;
+}
+
+.footer-detail-link,
+.footer-address-link {
+  color: var(--color-brand-mist);
+  font: inherit;
+  text-decoration: none;
+}
+
+.footer-address-link {
+  display: grid;
+  gap: 4px;
+  justify-items: end;
 }
 
 .footer-address {
@@ -465,6 +478,11 @@ input {
   .footer-address {
     gap: 3px;
     font-size: 8px;
+  }
+
+  .footer-address-link {
+    gap: 3px;
+    justify-items: center;
   }
 
   .mobile-nav {
