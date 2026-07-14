@@ -78,30 +78,12 @@ input {
   box-shadow: 14px 14px 0 var(--color-brand-slate);
 }
 
-.corner-lottie {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 34px;
-  height: 34px;
-}
-
-.corner-lottie-item {
-  position: absolute;
-  inset: 0;
-  visibility: hidden;
-}
-
-.corner-lottie-item.is-active {
-  visibility: visible;
-}
-
 .auth-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4px;
   padding: 4px;
-  margin: 24px 0 20px;
+  margin: 0 0 20px;
   border: 2px solid var(--color-brand-mist);
   border-radius: 8px;
   background: var(--color-white);
@@ -331,7 +313,7 @@ input {
   }
 
   .auth-tabs {
-    margin-top: 24px;
+    margin-top: 0;
   }
 
   .auth-row {

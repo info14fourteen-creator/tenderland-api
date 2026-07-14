@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { Router } from "express";
 import { z } from "zod";
@@ -6,18 +6,14 @@ import { defaultBusinessRoles, primaryBusinessRole } from "../access.js";
 import { config } from "../config.js";
 import { requireAuth, signUserToken } from "../auth.js";
 import { getPool, query } from "../db.js";
+import { sendRegistrationPasswordEmail } from "../mailer.js";
 
 const router = Router();
 
 const registerSchema = z.object({
   email: z.string().email().transform((email) => email.toLowerCase()),
-  password: z.string().min(8).max(128),
-  passwordConfirm: z.string().min(8).max(128),
   inviteCode: z.string().trim().min(8).max(128),
   fullName: z.string().trim().min(1).max(120).optional()
-}).refine((input) => input.password === input.passwordConfirm, {
-  message: "Passwords do not match",
-  path: ["passwordConfirm"]
 });
 
 const loginSchema = z.object({
@@ -44,17 +40,43 @@ function publicUser(user) {
   };
 }
 
+function randomChar(charset) {
+  return charset[randomInt(charset.length)];
+}
+
+function shuffle(value) {
+  return value
+    .split("")
+    .map((char) => ({ char, rank: randomInt(1_000_000) }))
+    .sort((left, right) => left.rank - right.rank)
+    .map(({ char }) => char)
+    .join("");
+}
+
+function generateTemporaryPassword() {
+  const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lower = "abcdefghijklmnopqrstuvwxyz";
+  const digits = "0123456789";
+  const all = `${upper}${lower}${digits}`;
+  const required = [randomChar(upper), randomChar(lower), randomChar(digits)];
+  const rest = Array.from({ length: 5 }, () => randomChar(all));
+
+  return shuffle([...required, ...rest].join(""));
+}
+
 router.post("/register", async (req, res, next) => {
-  const client = await getPool().connect();
+  let client;
 
   try {
     const input = registerSchema.parse(req.body);
-    const passwordHash = await bcrypt.hash(input.password, 12);
+    const temporaryPassword = generateTemporaryPassword();
+    const passwordHash = await bcrypt.hash(temporaryPassword, 12);
     const isAdminBootstrap =
       input.email === config.adminEmail &&
       Boolean(config.adminBootstrapInviteCode) &&
       input.inviteCode === config.adminBootstrapInviteCode;
 
+    client = await getPool().connect();
     await client.query("begin");
 
     let category = "user";
@@ -105,14 +127,29 @@ router.post("/register", async (req, res, next) => {
       );
     }
 
+    try {
+      await sendRegistrationPasswordEmail({
+        to: input.email,
+        password: temporaryPassword
+      });
+    } catch (error) {
+      await client.query("rollback");
+
+      if (error.code === "MAIL_NOT_CONFIGURED") {
+        return res.status(503).json({ error: "MAIL_NOT_CONFIGURED" });
+      }
+
+      console.error(error);
+      return res.status(502).json({ error: "MAIL_DELIVERY_FAILED" });
+    }
+
     await client.query("commit");
 
     const user = rows[0];
-    const token = signUserToken(user);
 
-    return res.status(201).json({ user: publicUser(user), token });
+    return res.status(201).json({ user: publicUser(user), passwordDelivery: "email" });
   } catch (error) {
-    await client.query("rollback").catch(() => {});
+    await client?.query("rollback").catch(() => {});
 
     if (error.code === "23505") {
       return res.status(409).json({ error: "USER_EMAIL_EXISTS" });
@@ -120,7 +157,7 @@ router.post("/register", async (req, res, next) => {
 
     return next(error);
   } finally {
-    client.release();
+    client?.release();
   }
 });
 

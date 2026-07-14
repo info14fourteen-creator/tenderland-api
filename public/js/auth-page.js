@@ -6,22 +6,8 @@
   const loginForm = document.querySelector('[data-auth-panel="login"]');
   const registerForm = document.querySelector('[data-auth-panel="register"]');
   const forgotButton = document.querySelector("[data-forgot-password]");
-  const cornerAnimations = new Map();
   const footerLottie = document.querySelector("[data-footer-lottie]");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  function syncCornerAnimation(mode) {
-    cornerAnimations.forEach(({ animation, target }, animationMode) => {
-      const isActive = animationMode === mode;
-      target.classList.toggle("is-active", isActive);
-
-      if (isActive) {
-        animation.play();
-      } else {
-        animation.goToAndStop(0, true);
-      }
-    });
-  }
 
   function setStatus(message, isError = false) {
     status.textContent = message;
@@ -44,7 +30,6 @@
       panel.classList.toggle("is-hidden", panel.dataset.authPanel !== mode);
     });
 
-    syncCornerAnimation(mode);
     setStatus("");
   }
 
@@ -71,17 +56,6 @@
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => setMode(tab.dataset.authMode));
-  });
-
-  document.querySelectorAll("[data-auth-corner-lottie]").forEach((target) => {
-    const animation = window.TenderlandLottie?.mount(target, {
-      autoplay: false,
-      loop: true
-    });
-
-    if (animation) {
-      cornerAnimations.set(target.dataset.authCornerLottie, { animation, target });
-    }
   });
 
   window.TenderlandLottie?.mount(footerLottie, {
@@ -154,22 +128,10 @@
     event.preventDefault();
     const formData = new FormData(registerForm);
     const email = String(formData.get("email") || "").trim().toLowerCase();
-    const password = String(formData.get("password") || "");
-    const passwordConfirm = String(formData.get("passwordConfirm") || "");
     const inviteCode = String(formData.get("inviteCode") || "").trim();
 
     if (!emailPattern.test(email)) {
       setStatus("Введите корректную почту.", true);
-      return;
-    }
-
-    if (password.length < 8) {
-      setStatus("Пароль должен быть не короче 8 символов.", true);
-      return;
-    }
-
-    if (password !== passwordConfirm) {
-      setStatus("Пароли не совпадают.", true);
       return;
     }
 
@@ -183,17 +145,16 @@
     try {
       const payload = await requestJson("/api/auth/register", {
         email,
-        password,
-        passwordConfirm,
         inviteCode
       });
 
-      storeSession(payload.token, true);
-      setStatus("Регистрация выполнена.");
+      setStatus(payload.passwordDelivery === "email" ? "Пароль отправлен на почту." : "Регистрация выполнена.");
     } catch (error) {
       const message = {
         INVALID_INVITATION: "Код приглашения недействителен.",
-        USER_EMAIL_EXISTS: "Эта почта уже зарегистрирована."
+        USER_EMAIL_EXISTS: "Эта почта уже зарегистрирована.",
+        MAIL_NOT_CONFIGURED: "Отправка почты ещё не настроена.",
+        MAIL_DELIVERY_FAILED: "Не удалось отправить письмо с паролем."
       }[error.message] || "Не удалось зарегистрироваться.";
 
       setStatus(message, true);

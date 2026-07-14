@@ -11,9 +11,17 @@ DATABASE_URL=
 JWT_SECRET=
 ADMIN_EMAIL=admin@kortex.capital
 ADMIN_BOOTSTRAP_INVITE_CODE=
+APP_URL=https://kortex.capital
+SMTP_HOST=smtp.mail.me.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=no-reply@kortex.capital
+SMTP_PASS=
+MAIL_FROM=no-reply@kortex.capital
 ```
 
 `DATABASE_URL` must point to a Postgres database.
+`SMTP_PASS` must be an app-specific password for the mailbox used by `SMTP_USER`.
 
 ## Development
 
@@ -54,13 +62,12 @@ Content-Type: application/json
 
 {
   "email": "user@example.com",
-  "password": "password123",
-  "passwordConfirm": "password123",
   "inviteCode": "invite-code"
 }
 ```
 
 Registration requires an invitation code tied to the same email address.
+The server generates an 8-character temporary password and sends it to the user's email.
 The first admin account uses `ADMIN_EMAIL` plus `ADMIN_BOOTSTRAP_INVITE_CODE`.
 
 ### Login
