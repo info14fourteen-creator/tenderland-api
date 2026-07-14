@@ -353,15 +353,15 @@ input {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     align-items: end;
-    gap: 4px;
-    padding: 7px 8px 8px;
+    gap: 0;
+    padding: 7px 8px 9px;
     border-radius: 8px;
-    background: var(--color-brand-mist);
+    background: var(--color-white);
   }
 
   .mobile-nav-item {
     display: grid;
-    grid-template-rows: 58px 10px;
+    grid-template-rows: 64px 12px;
     place-items: end center;
     gap: 2px;
     min-width: 0;
@@ -374,7 +374,8 @@ input {
 
   .mobile-nav-item span:last-child {
     align-self: end;
-    min-height: 10px;
+    min-height: 12px;
+    line-height: 12px;
   }
 
   .mobile-nav-item.is-active {
@@ -383,17 +384,17 @@ input {
 
   .mobile-nav-icon {
     display: block;
-    width: 42px;
-    height: 42px;
-    align-self: center;
+    width: 36px;
+    height: 36px;
+    align-self: end;
     padding: 0;
     border-radius: 8px;
     background: transparent;
   }
 
   .mobile-nav-item.is-primary .mobile-nav-icon {
-    width: 58px;
-    height: 58px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
   }
 }
