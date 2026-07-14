@@ -66,9 +66,21 @@
               <input name="inviteCode" type="text" autocomplete="one-time-code" placeholder="Код приглашения" required>
             </label>
 
+            <label class="consent">
+              <input name="acceptedTerms" type="checkbox" required>
+              <span>
+                Ознакомлен(а) и согласен(на) с
+                <a href="/terms" target="_blank" rel="noopener">условиями работы</a>
+                и
+                <a href="/privacy" target="_blank" rel="noopener">политикой конфиденциальности</a>
+              </span>
+            </label>
+
             <button class="primary-button" type="submit">
               <span>Зарегистрироваться</span>
             </button>
+
+            <a class="terms-link" href="/terms">Условия работы</a>
           </form>
 
           <p class="auth-status" role="status" aria-live="polite"></p>

@@ -35,6 +35,14 @@ app.use("/api/admin", adminRoutes);
 
 app.use(express.static(publicDir));
 
+app.get(["/terms", "/terms/"], (_req, res) => {
+  res.sendFile(join(publicDir, "terms.html"));
+});
+
+app.get(["/privacy", "/privacy/"], (_req, res) => {
+  res.sendFile(join(publicDir, "privacy.html"));
+});
+
 app.get(/^\/(?!api).*/, (req, res, next) => {
   if (!req.accepts("html")) {
     return next();

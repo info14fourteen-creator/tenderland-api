@@ -9,7 +9,8 @@ const migrations = [
   "002_create_invitations.sql",
   "003_require_invitation_email.sql",
   "004_split_categories_and_roles.sql",
-  "005_add_business_roles_array.sql"
+  "005_add_business_roles_array.sql",
+  "006_add_legal_acceptance.sql"
 ];
 
 for (const migration of migrations) {

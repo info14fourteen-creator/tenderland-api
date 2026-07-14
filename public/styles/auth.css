@@ -70,8 +70,8 @@ input {
 .auth-card {
   position: relative;
   width: min(100%, 420px);
-  min-height: 562px;
-  padding: 26px;
+  min-height: 434px;
+  padding: 24px;
   border: 2px solid var(--color-brand-mist);
   border-radius: 8px;
   background: var(--color-white);
@@ -83,7 +83,7 @@ input {
   grid-template-columns: 1fr 1fr;
   gap: 4px;
   padding: 4px;
-  margin: 0 0 20px;
+  margin: 0 0 18px;
   border: 2px solid var(--color-brand-mist);
   border-radius: 8px;
   background: var(--color-white);
@@ -108,7 +108,7 @@ input {
 
 .auth-form {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .auth-form.is-hidden {
@@ -170,6 +170,39 @@ input {
   flex: 0 0 auto;
 }
 
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--color-brand-navy);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.consent input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--color-brand-cyan);
+  flex: 0 0 auto;
+}
+
+.consent a,
+.terms-link {
+  color: var(--color-brand-blue);
+  font-weight: 900;
+}
+
+.terms-link {
+  justify-self: center;
+  min-height: 20px;
+  font-size: 11px;
+  line-height: 20px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .link-button {
   border: 0;
   padding: 0;
@@ -182,7 +215,7 @@ input {
 }
 
 .primary-button {
-  min-height: 48px;
+  min-height: 46px;
   border: 2px solid var(--color-brand-cyan);
   border-radius: 8px;
   color: var(--color-white);
@@ -212,7 +245,7 @@ input {
 
 .auth-status {
   min-height: 18px;
-  margin: 14px 0 0;
+  margin: 12px 0 0;
   color: var(--color-brand-blue);
   font-size: 13px;
   font-weight: 700;
@@ -270,6 +303,83 @@ input {
   display: none;
 }
 
+.legal-page {
+  padding: 52px 32px 64px;
+  color: var(--color-brand-navy);
+  background: var(--color-white);
+}
+
+.legal-document {
+  width: min(100%, 820px);
+  margin: 0 auto;
+}
+
+.legal-heading {
+  margin-bottom: 38px;
+}
+
+.legal-heading h1 {
+  margin: 0 0 10px;
+  color: var(--color-brand-navy);
+  font-size: 44px;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.legal-heading p,
+.legal-section p,
+.legal-section li {
+  color: var(--color-brand-slate);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.legal-heading p {
+  margin: 0;
+  color: var(--color-brand-blue);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.legal-section {
+  padding: 24px 0;
+  border-top: 2px solid var(--color-brand-mist);
+}
+
+.legal-section h2 {
+  margin: 0 0 12px;
+  color: var(--color-brand-navy);
+  font-size: 20px;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.legal-section p {
+  margin: 0 0 12px;
+}
+
+.legal-section p:last-child {
+  margin-bottom: 0;
+}
+
+.legal-section ul {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.legal-section a,
+.legal-back-link {
+  color: var(--color-brand-blue);
+  font-weight: 900;
+}
+
+.legal-back-link {
+  display: inline-flex;
+  margin-top: 30px;
+  font-size: 14px;
+  text-underline-offset: 3px;
+}
+
 @media (max-width: 440px) {
   .site-header {
     padding: 16px 16px 6px;
@@ -285,8 +395,8 @@ input {
   }
 
   .auth-card {
-    min-height: 554px;
-    padding: 22px;
+    min-height: 434px;
+    padding: 20px;
     box-shadow: 8px 8px 0 var(--color-brand-slate);
   }
 
@@ -316,6 +426,36 @@ input {
     font-size: 9px;
     line-height: 1.25;
     text-align: center;
+  }
+
+  .legal-page {
+    padding: 36px 20px 44px;
+  }
+
+  .legal-heading {
+    margin-bottom: 28px;
+  }
+
+  .legal-heading h1 {
+    font-size: 30px;
+  }
+
+  .legal-heading p,
+  .legal-section p,
+  .legal-section li {
+    font-size: 13px;
+  }
+
+  .legal-section {
+    padding: 20px 0;
+  }
+
+  .legal-section h2 {
+    font-size: 18px;
+  }
+
+  .legal-body .site-footer {
+    padding-bottom: 28px;
   }
 
   .footer-legal {

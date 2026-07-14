@@ -123,6 +123,7 @@
     const formData = new FormData(registerForm);
     const email = String(formData.get("email") || "").trim().toLowerCase();
     const inviteCode = String(formData.get("inviteCode") || "").trim();
+    const acceptedTerms = formData.get("acceptedTerms") === "on";
 
     if (!emailPattern.test(email)) {
       setStatus("Введите корректную почту.", true);
@@ -134,12 +135,18 @@
       return;
     }
 
+    if (!acceptedTerms) {
+      setStatus("Подтвердите согласие с условиями работы.", true);
+      return;
+    }
+
     setLoading(registerForm, true);
 
     try {
       const payload = await requestJson("/api/auth/register", {
         email,
-        inviteCode
+        inviteCode,
+        acceptedTerms
       });
 
       setStatus(payload.passwordDelivery === "email" ? "Пароль отправлен на почту." : "Регистрация выполнена.");

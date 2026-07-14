@@ -62,11 +62,13 @@ Content-Type: application/json
 
 {
   "email": "user@example.com",
-  "inviteCode": "invite-code"
+  "inviteCode": "invite-code",
+  "acceptedTerms": true
 }
 ```
 
 Registration requires an invitation code tied to the same email address.
+Registration also requires acceptance of the current terms and privacy policy. The acceptance date and document versions are stored with the user.
 The server generates an 8-character temporary password and sends it to the user's email.
 The first admin account uses `ADMIN_EMAIL` plus `ADMIN_BOOTSTRAP_INVITE_CODE`.
 

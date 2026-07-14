@@ -9,10 +9,13 @@ import { getPool, query } from "../db.js";
 import { sendRegistrationPasswordEmail } from "../mailer.js";
 
 const router = Router();
+const termsVersion = "2026-07-14";
+const privacyVersion = "2026-07-14";
 
 const registerSchema = z.object({
   email: z.string().email().transform((email) => email.toLowerCase()),
   inviteCode: z.string().trim().min(8).max(128),
+  acceptedTerms: z.literal(true),
   fullName: z.string().trim().min(1).max(120).optional()
 });
 
@@ -112,10 +115,27 @@ router.post("/register", async (req, res, next) => {
     const userId = randomUUID();
     const businessRole = primaryBusinessRole(businessRoles);
     const { rows } = await client.query(
-      `insert into users (id, email, password_hash, full_name, category, business_role, business_roles, role)
-       values ($1, $2, $3, $4, $5, $6, $7, case when $5 = 'super_admin' then 'admin' when $5 = 'admin' then 'admin' else 'user' end)
+      `insert into users (
+         id, email, password_hash, full_name, category, business_role, business_roles, role,
+         terms_accepted_at, terms_version, privacy_version
+       )
+       values (
+         $1, $2, $3, $4, $5, $6, $7,
+         case when $5 = 'super_admin' then 'admin' when $5 = 'admin' then 'admin' else 'user' end,
+         now(), $8, $9
+       )
        returning id, email, full_name, category, business_role, business_roles, status, created_at, updated_at, last_login_at`,
-      [userId, input.email, passwordHash, input.fullName || null, category, businessRole, businessRoles]
+      [
+        userId,
+        input.email,
+        passwordHash,
+        input.fullName || null,
+        category,
+        businessRole,
+        businessRoles,
+        termsVersion,
+        privacyVersion
+      ]
     );
 
     if (invitationId) {
