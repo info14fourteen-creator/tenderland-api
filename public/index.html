@@ -9,26 +9,18 @@
   <body>
     <main class="auth-page">
       <section class="auth-card" aria-label="Авторизация">
-        <div class="auth-brand">KORTEX CAPITAL</div>
+        <div class="corner-lottie" data-auth-corner-lottie aria-hidden="true"></div>
+
+        <div class="auth-brand">
+          <img src="/assets/logo_text_25274D_464866.svg" alt="Kortex Capital">
+        </div>
 
         <div class="auth-tabs" role="tablist" aria-label="Режим авторизации">
           <button class="auth-tab is-active" type="button" data-auth-mode="login" role="tab" aria-selected="true">
-            <span>Вход</span>
-            <span
-              class="tab-lottie"
-              data-auth-tab-lottie="login"
-              data-lottie-path="/assets/login-animation.json"
-              aria-hidden="true"
-            ></span>
+            Вход
           </button>
           <button class="auth-tab" type="button" data-auth-mode="register" role="tab" aria-selected="false">
-            <span>Регистрация</span>
-            <span
-              class="tab-lottie"
-              data-auth-tab-lottie="register"
-              data-lottie-path="/assets/register-button-animation.json"
-              aria-hidden="true"
-            ></span>
+            Регистрация
           </button>
         </div>
 
