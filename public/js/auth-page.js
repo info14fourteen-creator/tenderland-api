@@ -88,6 +88,13 @@
     loop: true
   });
 
+  document.querySelectorAll("[data-mobile-nav-lottie]").forEach((target) => {
+    window.TenderlandLottie?.mount(target, {
+      autoplay: true,
+      loop: true
+    });
+  });
+
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const formData = new FormData(loginForm);
