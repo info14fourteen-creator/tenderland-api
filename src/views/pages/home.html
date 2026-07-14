@@ -14,7 +14,18 @@
       <!-- SITE_HEADER -->
 
       <main class="home-page" aria-label="Рабочее пространство">
-        <aside class="home-panel home-panel-left" aria-label="Левая панель"></aside>
+        <aside class="home-panel home-panel-left" aria-label="Левая панель">
+          <nav class="home-sidebar-nav" aria-label="Основная навигация">
+            <a class="home-sidebar-item is-active" href="/home" aria-current="page">
+              <span class="home-sidebar-icon" data-home-sidebar-lottie data-lottie-path="/assets/mobile-home.json" aria-hidden="true"></span>
+              <span class="home-sidebar-label">Главная</span>
+            </a>
+          </nav>
+
+          <button class="home-panel-toggle" type="button" data-home-panel-toggle aria-expanded="true" aria-label="Свернуть левую панель" title="Свернуть левую панель">
+            <span class="home-panel-toggle-icon" data-home-panel-toggle-lottie aria-hidden="true"></span>
+          </button>
+        </aside>
         <section class="home-workspace" aria-label="Рабочая область"></section>
         <aside class="home-panel home-panel-right" aria-label="Правая панель"></aside>
       </main>
