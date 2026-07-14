@@ -9,7 +9,8 @@ export function signUserToken(user) {
     {
       sub: user.id,
       email: user.email,
-      role: user.role
+      category: user.category,
+      role: user.business_role
     },
     config.jwtSecret,
     { expiresIn: config.jwtExpiresIn }
@@ -29,7 +30,7 @@ export async function requireAuth(req, res, next) {
 
     const payload = jwt.verify(token, config.jwtSecret);
     const { rows } = await query(
-      `select id, email, full_name, role, status, created_at, updated_at, last_login_at
+      `select id, email, full_name, category, business_role, status, created_at, updated_at, last_login_at
        from users
        where id = $1 and status = 'active'`,
       [payload.sub]
@@ -51,8 +52,16 @@ export async function requireAuth(req, res, next) {
 }
 
 export function requireAdmin(req, res, next) {
-  if (req.user?.role !== "admin") {
+  if (!["admin", "super_admin"].includes(req.user?.category)) {
     return res.status(403).json({ error: "ADMIN_REQUIRED" });
+  }
+
+  return next();
+}
+
+export function requireSuperAdmin(req, res, next) {
+  if (req.user?.category !== "super_admin") {
+    return res.status(403).json({ error: "SUPER_ADMIN_REQUIRED" });
   }
 
   return next();

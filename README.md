@@ -25,6 +25,27 @@ npm run dev
 
 ## Auth API
 
+Users have a separate access category and business role.
+
+Access categories:
+
+- `user`
+- `admin`
+- `super_admin`
+
+Business roles:
+
+- `Менеджер`
+- `Специалист по работе с государственным сегментом`
+- `Специалист юридической службы`
+- `Финансовый контроллер`
+- `Бухгалтер`
+- `Специалист службы безопасности`
+- `Специалист отдела закупок`
+- `Специалист отдела продаж`
+- `Специалист отдела делопроизводства`
+- `Специалист отдела логистики`
+
 ### Register
 
 ```http
@@ -70,9 +91,11 @@ Content-Type: application/json
 
 {
   "email": "user@example.com",
-  "role": "user",
+  "category": "user",
+  "role": "Менеджер",
   "expiresInDays": 14
 }
 ```
 
 The returned invite code can only be used with the email it was created for.
+Only `super_admin` can create invitations for `admin` and `super_admin` categories.

@@ -7,7 +7,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const migrations = [
   "001_create_users.sql",
   "002_create_invitations.sql",
-  "003_require_invitation_email.sql"
+  "003_require_invitation_email.sql",
+  "004_split_categories_and_roles.sql"
 ];
 
 for (const migration of migrations) {
