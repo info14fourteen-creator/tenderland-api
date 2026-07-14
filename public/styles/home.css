@@ -94,8 +94,8 @@ body {
 
 .home-panel-toggle-icon {
   display: block;
-  width: 38px;
-  height: 38px;
+  width: 16px;
+  height: 16px;
   pointer-events: none;
 }
 
@@ -128,8 +128,8 @@ body {
 
 .home-body.is-left-panel-collapsed .site-logo .site-logo-mark {
   display: block;
-  width: 36px;
-  height: 36px;
+  width: auto;
+  height: 43px;
 }
 
 .home-workspace,
