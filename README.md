@@ -31,6 +31,14 @@ npm run migrate
 npm run dev
 ```
 
+Shared site chrome is rendered on the server for every public page:
+
+- `src/views/partials/site-header.html` — the single header source
+- `src/views/partials/site-footer.html` — the single footer source
+- `public/styles/site-chrome.css` — shared header and footer styles
+
+Public page templates live in `src/views/pages`.
+
 ## Auth API
 
 Users have a separate access category and business roles.

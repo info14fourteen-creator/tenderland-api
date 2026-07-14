@@ -1,4 +1,5 @@
 import express from "express";
+import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { config } from "./config.js";
@@ -9,6 +10,27 @@ import authRoutes from "./routes/authRoutes.js";
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(__dirname, "..", "public");
+const viewsDir = join(__dirname, "views");
+const pagesDir = join(viewsDir, "pages");
+const partialsDir = join(viewsDir, "partials");
+
+async function renderPublicPage(filename) {
+  const [page, header, footer] = await Promise.all([
+    readFile(join(pagesDir, filename), "utf8"),
+    readFile(join(partialsDir, "site-header.html"), "utf8"),
+    readFile(join(partialsDir, "site-footer.html"), "utf8")
+  ]);
+
+  return page
+    .replace("<!-- SITE_HEADER -->", header)
+    .replace("<!-- SITE_FOOTER -->", footer);
+}
+
+function publicPage(filename) {
+  return async (_req, res) => {
+    res.type("html").send(await renderPublicPage(filename));
+  };
+}
 
 app.use(express.json({ limit: "1mb" }));
 
@@ -33,22 +55,25 @@ app.get("/health", async (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 
+app.get("/", publicPage("index.html"));
+app.get(["/terms", "/terms/"], publicPage("terms.html"));
+app.get(["/privacy", "/privacy/"], publicPage("privacy.html"));
+app.get(/^\/brandbook$/, (_req, res) => res.redirect(308, "/brandbook/"));
+app.get(/^\/brandbook\/$/, publicPage("brandbook.html"));
+
+app.get("/index.html", (_req, res) => res.redirect(308, "/"));
+app.get("/terms.html", (_req, res) => res.redirect(308, "/terms"));
+app.get("/privacy.html", (_req, res) => res.redirect(308, "/privacy"));
+app.get("/brandbook/index.html", (_req, res) => res.redirect(308, "/brandbook/"));
+
 app.use(express.static(publicDir));
 
-app.get(["/terms", "/terms/"], (_req, res) => {
-  res.sendFile(join(publicDir, "terms.html"));
-});
-
-app.get(["/privacy", "/privacy/"], (_req, res) => {
-  res.sendFile(join(publicDir, "privacy.html"));
-});
-
-app.get(/^\/(?!api).*/, (req, res, next) => {
+app.get(/^\/(?!api).*/, async (req, res, next) => {
   if (!req.accepts("html")) {
     return next();
   }
 
-  res.sendFile(join(publicDir, "index.html"));
+  return res.type("html").send(await renderPublicPage("index.html"));
 });
 
 app.use("/api", (_req, res) => {

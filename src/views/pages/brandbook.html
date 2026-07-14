@@ -4,18 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kortex Capital — мини-брендбук логотипа</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/styles/site-chrome.css">
   <style>
     :root{--navy:#25274D;--slate:#464866;--silver:#AAABB8;--cyan:#2E9CCA;--blue:#29648A;--white:#FFFFFF;--black:#000000}
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{margin:0;background:var(--white);color:var(--navy);font-family:Inter,Arial,sans-serif;line-height:1.5}
-    header{background:var(--navy);color:var(--white);padding:64px max(24px,calc((100vw - 1180px)/2)) 72px}
-    header img{display:block;width:200px;height:auto;margin-bottom:42px}
+    .brandbook-hero{background:var(--navy);color:var(--white);padding:64px max(24px,calc((100vw - 1180px)/2)) 72px}
+    .brandbook-hero img{display:block;width:200px;height:auto;margin-bottom:42px}
     h1{font-size:clamp(42px,7vw,82px);line-height:.98;letter-spacing:-.055em;margin:0;max-width:780px}
-    header p{font-size:18px;max-width:650px;margin:26px 0 0;color:var(--silver)}
-    nav{display:flex;gap:20px;flex-wrap:wrap;margin-top:38px}
-    nav a{color:var(--white);text-decoration:none;border-bottom:2px solid var(--cyan);padding-bottom:3px;font-size:14px}
-    main{max-width:1180px;margin:auto;padding:72px 24px 96px}
+    .brandbook-hero p{font-size:18px;max-width:650px;margin:26px 0 0;color:var(--silver)}
+    .brandbook-nav{display:flex;gap:20px;flex-wrap:wrap;margin-top:38px}
+    .brandbook-nav a{color:var(--white);text-decoration:none;border-bottom:2px solid var(--cyan);padding-bottom:3px;font-size:14px}
+    .brandbook-main{width:100%;background:var(--white)}
+    .brandbook-content{max-width:1180px;margin:auto;padding:72px 24px 96px}
     section{margin-top:92px}
     section:first-child{margin-top:0}
     h2{font-size:clamp(30px,4vw,48px);letter-spacing:-.04em;line-height:1.05;margin:0 0 18px}
@@ -51,20 +54,24 @@
     .space-demo img{width:190px;height:154px;object-fit:contain;outline:2px solid var(--cyan);outline-offset:28px}
     .space-copy{background:var(--navy);color:var(--white);padding:42px}
     .space-copy p{color:var(--silver)}
-    footer{background:var(--black);color:var(--white);padding:34px max(24px,calc((100vw - 1180px)/2));font-size:13px}
     code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     @media(max-width:850px){.palette{grid-template-columns:repeat(2,1fr)}.swatch:last-child{grid-column:1/-1}.variant-grid{grid-template-columns:1fr 1fr}.preview-grid,.clearspace{grid-template-columns:1fr}}
-    @media(max-width:560px){header{padding-top:42px}.variant-grid,.rules{grid-template-columns:1fr}.preview,.variant{min-height:230px;padding:24px}.preview img,.variant img{height:150px}.palette{grid-template-columns:1fr}.swatch:last-child{grid-column:auto}}
+    @media(max-width:560px){.brandbook-hero{padding-top:42px}.variant-grid,.rules{grid-template-columns:1fr}.preview,.variant{min-height:230px;padding:24px}.preview img,.variant img{height:150px}.palette{grid-template-columns:1fr}.swatch:last-child{grid-column:auto}}
   </style>
 </head>
 <body>
-  <header>
-    <img src="logos/kortex-lockup-FFFFFF-AAABB8.svg" alt="Kortex Capital">
-    <h1>Система цвета логотипа</h1>
-    <p>Мини-брендбук фиксирует допустимые цветовые версии знака и логотипа, выбор фона, сочетания и ограничения. Палитра закрытая: никаких дополнительных цветов и градиентов.</p>
-    <nav><a href="#palette">Палитра</a><a href="#primary">Основные версии</a><a href="#variants">Все цвета</a><a href="#rules">Правила</a><a href="#dont">Запреты</a></nav>
-  </header>
-  <main>
+  <div class="site-shell">
+    <!-- SITE_HEADER -->
+
+    <div class="brandbook-hero">
+      <img src="logos/kortex-lockup-FFFFFF-AAABB8.svg" alt="Kortex Capital">
+      <h1>Система цвета логотипа</h1>
+      <p>Мини-брендбук фиксирует допустимые цветовые версии знака и логотипа, выбор фона, сочетания и ограничения. Палитра закрытая: никаких дополнительных цветов и градиентов.</p>
+      <nav class="brandbook-nav"><a href="#palette">Палитра</a><a href="#primary">Основные версии</a><a href="#variants">Все цвета</a><a href="#rules">Правила</a><a href="#dont">Запреты</a></nav>
+    </div>
+
+    <main class="brandbook-main">
+      <div class="brandbook-content">
     <section id="palette">
       <h2>Закреплённая палитра</h2>
       <p class="lead">Семь точных значений. Цвета не осветляются, не затемняются и не смешиваются.</p>
@@ -128,7 +135,10 @@
         <article class="rule"><span class="tag no">НЕТ</span><h3>Шумный фон</h3><ul><li>логотип поверх фотографии без чистого поля;</li><li>фон, пересекающий контуры знака;</li><li>рамка, касающаяся защитного поля.</li></ul></article>
       </div>
     </section>
-  </main>
-  <footer>Kortex Capital · Logo color system · Палитра: #25274D · #464866 · #AAABB8 · #2E9CCA · #29648A · #FFFFFF · #000000</footer>
+      </div>
+    </main>
+
+    <!-- SITE_FOOTER -->
+  </div>
 </body>
 </html>
