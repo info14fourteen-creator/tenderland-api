@@ -11,12 +11,6 @@
       <section class="auth-card" aria-label="Авторизация">
         <div class="auth-brand">KORTEX CAPITAL</div>
 
-        <div
-          class="auth-lottie"
-          data-lottie-path="/assets/login-animation.json"
-          aria-hidden="true"
-        ></div>
-
         <div class="auth-tabs" role="tablist" aria-label="Режим авторизации">
           <button class="auth-tab is-active" type="button" data-auth-mode="login" role="tab" aria-selected="true">
             Вход
@@ -42,12 +36,20 @@
               <input name="remember" type="checkbox">
               <span>Запомнить на этом устройстве</span>
             </label>
-            <button class="link-button" type="button" data-forgot-password>
-              Забыли пароль?
-            </button>
           </div>
 
-          <button class="primary-button" type="submit">Войти</button>
+          <button class="primary-button" type="submit">
+            <span
+              class="button-lottie"
+              data-lottie-path="/assets/login-animation.json"
+              aria-hidden="true"
+            ></span>
+            <span>Войти</span>
+          </button>
+
+          <button class="link-button forgot-link" type="button" data-forgot-password>
+            Забыли пароль?
+          </button>
         </form>
 
         <form class="auth-form is-hidden" data-auth-panel="register" novalidate>
@@ -71,7 +73,14 @@
             <input name="inviteCode" type="text" autocomplete="one-time-code" placeholder="Invite code" required>
           </label>
 
-          <button class="primary-button" type="submit">Зарегистрироваться</button>
+          <button class="primary-button" type="submit">
+            <span
+              class="button-lottie"
+              data-lottie-path="/assets/register-button-animation.json"
+              aria-hidden="true"
+            ></span>
+            <span>Зарегистрироваться</span>
+          </button>
         </form>
 
         <p class="auth-status" role="status" aria-live="polite"></p>

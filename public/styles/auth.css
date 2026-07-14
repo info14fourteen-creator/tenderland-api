@@ -40,6 +40,7 @@ input {
 .auth-card {
   position: relative;
   width: min(100%, 408px);
+  min-height: 640px;
   padding: 30px;
   border: 2px solid var(--color-brand-mist);
   border-radius: 8px;
@@ -67,16 +68,6 @@ input {
   font-size: 15px;
   font-weight: 900;
   line-height: 1;
-}
-
-.auth-lottie {
-  width: 96px;
-  height: 96px;
-  margin: 0 auto 20px;
-  padding: 12px;
-  border: 2px solid var(--color-brand-mist);
-  border-radius: 8px;
-  background: var(--color-white);
 }
 
 .auth-tabs {
@@ -150,7 +141,7 @@ input {
 .auth-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
 }
 
@@ -189,9 +180,23 @@ input {
   color: var(--color-white);
   background: var(--color-brand-cyan);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   font-size: 16px;
   font-weight: 900;
   transition: transform 160ms ease, background 160ms ease;
+}
+
+.button-lottie {
+  width: 34px;
+  height: 34px;
+  padding: 3px;
+  border: 2px solid var(--color-brand-blue);
+  border-radius: 6px;
+  background: var(--color-white);
+  flex: 0 0 auto;
 }
 
 .primary-button:hover {
@@ -209,7 +214,7 @@ input {
 
 .auth-status {
   min-height: 18px;
-  margin: 16px 0 0;
+  margin: 18px 0 0;
   color: var(--color-brand-blue);
   font-size: 13px;
   font-weight: 700;
@@ -221,12 +226,19 @@ input {
   color: var(--color-black);
 }
 
+.forgot-link {
+  justify-self: center;
+  min-height: 24px;
+  margin-top: -4px;
+}
+
 @media (max-width: 440px) {
   .auth-page {
     padding: 16px;
   }
 
   .auth-card {
+    min-height: 632px;
     padding: 24px;
     box-shadow: 8px 8px 0 var(--color-brand-slate);
   }

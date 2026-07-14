@@ -17,5 +17,11 @@
     return animation;
   }
 
-  window.TenderlandLottie = { mount: mountLottie };
+  function mountAll(root = document) {
+    return Array.from(root.querySelectorAll("[data-lottie-path]")).map((target) =>
+      mountLottie(target)
+    );
+  }
+
+  window.TenderlandLottie = { mount: mountLottie, mountAll };
 })();

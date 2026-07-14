@@ -7,7 +7,7 @@
   const registerForm = document.querySelector('[data-auth-panel="register"]');
   const forgotButton = document.querySelector("[data-forgot-password]");
 
-  window.TenderlandLottie?.mount(document.querySelector(".auth-lottie"));
+  window.TenderlandLottie?.mountAll();
 
   function setStatus(message, isError = false) {
     status.textContent = message;
