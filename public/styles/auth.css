@@ -151,6 +151,7 @@ input {
 .terms-link {
   color: var(--color-brand-blue);
   font-weight: 900;
+  text-decoration: none;
 }
 
 .terms-link {
@@ -158,8 +159,6 @@ input {
   min-height: 20px;
   font-size: 11px;
   line-height: 20px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .link-button {
@@ -203,13 +202,26 @@ input {
 }
 
 .auth-status {
-  min-height: 18px;
-  margin: 12px 0 0;
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 8px;
+  min-height: 0;
+  margin: 0;
   color: var(--color-brand-blue);
   font-size: 13px;
   font-weight: 700;
   line-height: 1.4;
   text-align: center;
+}
+
+.auth-status:not(:empty) {
+  min-height: 18px;
+}
+
+.auth-card.has-status .forgot-link,
+.auth-card.has-status .terms-link {
+  visibility: hidden;
 }
 
 .auth-status.is-error {
@@ -312,6 +324,11 @@ input {
     min-height: 434px;
     padding: 20px;
     box-shadow: 8px 8px 0 var(--color-brand-slate);
+  }
+
+  .auth-status {
+    left: 20px;
+    right: 20px;
   }
 
   .auth-tabs {

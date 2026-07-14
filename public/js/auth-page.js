@@ -1,5 +1,6 @@
 (function () {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const card = document.querySelector(".auth-card");
   const status = document.querySelector(".auth-status");
   const tabs = Array.from(document.querySelectorAll("[data-auth-mode]"));
   const panels = Array.from(document.querySelectorAll("[data-auth-panel]"));
@@ -11,6 +12,7 @@
   function setStatus(message, isError = false) {
     status.textContent = message;
     status.classList.toggle("is-error", isError);
+    card.classList.toggle("has-status", Boolean(message));
   }
 
   function setLoading(form, isLoading) {
