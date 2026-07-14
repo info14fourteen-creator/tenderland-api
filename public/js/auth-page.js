@@ -8,6 +8,7 @@
   const forgotButton = document.querySelector("[data-forgot-password]");
   const cornerAnimations = new Map();
   const footerLottie = document.querySelector("[data-footer-lottie]");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function syncCornerAnimation(mode) {
     cornerAnimations.forEach(({ animation, target }, animationMode) => {
@@ -89,10 +90,40 @@
   });
 
   document.querySelectorAll("[data-mobile-nav-lottie]").forEach((target) => {
-    window.TenderlandLottie?.mount(target, {
-      autoplay: true,
+    const item = target.closest(".mobile-nav-item");
+    const isActive = item?.classList.contains("is-active");
+    const animation = window.TenderlandLottie?.mount(target, {
+      autoplay: false,
       loop: true
     });
+
+    if (!animation) return;
+
+    let releaseTimer = null;
+
+    const play = () => {
+      window.clearTimeout(releaseTimer);
+      if (!prefersReducedMotion) animation.goToAndPlay(0, true);
+    };
+
+    const stopIfInactive = () => {
+      if (isActive) return;
+      window.clearTimeout(releaseTimer);
+      releaseTimer = window.setTimeout(() => animation.goToAndStop(0, true), 420);
+    };
+
+    if (isActive && !prefersReducedMotion) {
+      animation.play();
+    } else {
+      animation.goToAndStop(0, true);
+    }
+
+    item?.addEventListener("pointerdown", play);
+    item?.addEventListener("pointerup", stopIfInactive);
+    item?.addEventListener("pointercancel", stopIfInactive);
+    item?.addEventListener("pointerleave", stopIfInactive);
+    item?.addEventListener("focus", play);
+    item?.addEventListener("blur", stopIfInactive);
   });
 
   loginForm.addEventListener("submit", async (event) => {
