@@ -30,6 +30,16 @@
   width: 100%;
 }
 
+.site-header-brand {
+  display: flex;
+  align-items: center;
+}
+
+.workspace-header-search,
+.workspace-header-actions {
+  display: none;
+}
+
 .site-logo {
   display: inline-flex;
   align-items: center;

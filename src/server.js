@@ -59,6 +59,7 @@ app.use("/api/admin", adminRoutes);
 
 app.get("/", publicPage("index.html"));
 app.get(["/home", "/home/"], publicPage("home.html"));
+app.get(["/account", "/account/"], publicPage("account.html"));
 app.get(["/terms", "/terms/"], publicPage("terms.html"));
 app.get(["/privacy", "/privacy/"], publicPage("privacy.html"));
 app.get(/^\/brandbook$/, (_req, res) => res.redirect(308, "/brandbook/"));

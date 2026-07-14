@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Главная — Kortex Capital</title>
+    <title>Личный кабинет — Kortex Capital</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="/styles/site-chrome.css">
     <link rel="stylesheet" href="/styles/mobile-nav.css">
     <link rel="stylesheet" href="/styles/home.css">
   </head>
-  <body class="home-body has-mobile-nav">
+  <body class="home-body account-body has-mobile-nav">
     <div class="site-shell home-shell">
       <!-- SITE_HEADER -->
 
@@ -26,7 +26,14 @@
             <span class="home-panel-toggle-icon" data-home-panel-toggle-lottie aria-hidden="true"></span>
           </button>
         </aside>
-        <section class="home-workspace" aria-label="Рабочая область"></section>
+
+        <section class="home-workspace account-workspace" aria-labelledby="account-title">
+          <div class="account-placeholder">
+            <h1 id="account-title">Личный кабинет</h1>
+            <p>В разработке</p>
+          </div>
+        </section>
+
         <aside class="home-panel home-panel-right" aria-label="Правая панель"></aside>
       </main>
 

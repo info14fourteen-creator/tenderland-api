@@ -1,8 +1,25 @@
 <header class="site-header" aria-label="Шапка сайта">
   <div class="site-header-inner">
-    <a class="site-logo" href="/" aria-label="Kortex Capital">
-      <img class="site-logo-wordmark" src="/assets/logo_text_header.svg" alt="">
-      <img class="site-logo-mark" src="/assets/logo_mark_header.svg" alt="">
-    </a>
+    <div class="site-header-brand">
+      <a class="site-logo" href="/" aria-label="Kortex Capital">
+        <img class="site-logo-wordmark" src="/assets/logo_text_header.svg" alt="">
+        <img class="site-logo-mark" src="/assets/logo_mark_header.svg" alt="">
+      </a>
+    </div>
+
+    <form class="workspace-header-search" role="search" data-workspace-search>
+      <span class="workspace-search-icon" data-workspace-search-lottie data-lottie-path="/assets/mobile-search.json" aria-hidden="true"></span>
+      <input class="workspace-search-input" type="search" name="q" placeholder="Поиск" autocomplete="off" aria-label="Поиск">
+    </form>
+
+    <div class="workspace-header-actions">
+      <a class="workspace-account-link" href="/account" data-workspace-account-link>
+        <span class="workspace-account-icon" data-workspace-account-lottie data-lottie-path="/assets/header-account.json" aria-hidden="true"></span>
+        <span class="workspace-account-label">Личный кабинет</span>
+      </a>
+      <button class="workspace-notification-button" type="button" data-workspace-notifications aria-label="Уведомления" title="Уведомления">
+        <span class="workspace-notification-icon" data-workspace-notification-lottie data-lottie-path="/assets/header-notifications.json" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 </header>
