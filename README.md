@@ -9,6 +9,8 @@ Copy `.env.example` to `.env` and fill the required values:
 ```bash
 DATABASE_URL=
 JWT_SECRET=
+ADMIN_EMAIL=admin@kortex.capital
+ADMIN_BOOTSTRAP_INVITE_CODE=
 ```
 
 `DATABASE_URL` must point to a Postgres database.
@@ -32,9 +34,13 @@ Content-Type: application/json
 {
   "email": "user@example.com",
   "password": "password123",
-  "fullName": "User Name"
+  "passwordConfirm": "password123",
+  "inviteCode": "invite-code"
 }
 ```
+
+Registration requires an invitation code. The first admin account uses
+`ADMIN_EMAIL` plus `ADMIN_BOOTSTRAP_INVITE_CODE`.
 
 ### Login
 
@@ -53,4 +59,18 @@ Content-Type: application/json
 ```http
 GET /api/auth/me
 Authorization: Bearer <token>
+```
+
+### Create Invitation
+
+```http
+POST /api/admin/invitations
+Authorization: Bearer <admin-token>
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "role": "user",
+  "expiresInDays": 14
+}
 ```

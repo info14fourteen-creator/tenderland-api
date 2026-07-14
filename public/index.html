@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kortex Capital</title>
+    <link rel="stylesheet" href="/styles/auth.css">
+  </head>
+  <body>
+    <main class="auth-page">
+      <section class="auth-card" aria-label="Авторизация">
+        <div
+          class="auth-lottie"
+          data-lottie-path="/assets/login-animation.json"
+          aria-hidden="true"
+        ></div>
+
+        <div class="auth-tabs" role="tablist" aria-label="Режим авторизации">
+          <button class="auth-tab is-active" type="button" data-auth-mode="login" role="tab" aria-selected="true">
+            Вход
+          </button>
+          <button class="auth-tab" type="button" data-auth-mode="register" role="tab" aria-selected="false">
+            Регистрация
+          </button>
+        </div>
+
+        <form class="auth-form" data-auth-panel="login" novalidate>
+          <label class="field">
+            <span>Почта</span>
+            <input name="email" type="email" autocomplete="email" placeholder="admin@kortex.capital" required>
+          </label>
+
+          <label class="field">
+            <span>Пароль</span>
+            <input name="password" type="password" autocomplete="current-password" placeholder="Пароль" required>
+          </label>
+
+          <div class="auth-row">
+            <label class="remember">
+              <input name="remember" type="checkbox">
+              <span>Запомнить на этом устройстве</span>
+            </label>
+            <button class="link-button" type="button" data-forgot-password>
+              Забыли пароль?
+            </button>
+          </div>
+
+          <button class="primary-button" type="submit">Войти</button>
+        </form>
+
+        <form class="auth-form is-hidden" data-auth-panel="register" novalidate>
+          <label class="field">
+            <span>Почта</span>
+            <input name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+          </label>
+
+          <label class="field">
+            <span>Пароль</span>
+            <input name="password" type="password" autocomplete="new-password" placeholder="Минимум 8 символов" required>
+          </label>
+
+          <label class="field">
+            <span>Повторите пароль</span>
+            <input name="passwordConfirm" type="password" autocomplete="new-password" placeholder="Ещё раз пароль" required>
+          </label>
+
+          <label class="field">
+            <span>Код приглашения</span>
+            <input name="inviteCode" type="text" autocomplete="one-time-code" placeholder="Invite code" required>
+          </label>
+
+          <button class="primary-button" type="submit">Зарегистрироваться</button>
+        </form>
+
+        <p class="auth-status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script src="/vendor/lottie.min.js"></script>
+    <script src="/js/lottie-loader.js"></script>
+    <script src="/js/auth-page.js"></script>
+  </body>
+</html>
