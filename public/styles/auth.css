@@ -228,6 +228,63 @@ input {
   color: var(--color-black);
 }
 
+.success-dialog {
+  width: min(calc(100% - 32px), 380px);
+  border: 2px solid var(--color-brand-mist);
+  border-radius: 8px;
+  padding: 0;
+  color: var(--color-brand-navy);
+  background: var(--color-white);
+  box-shadow: 12px 12px 0 var(--color-brand-slate);
+}
+
+.success-dialog::backdrop {
+  background: rgb(0 0 0 / 55%);
+}
+
+.success-dialog-content {
+  position: relative;
+  padding: 28px;
+  text-align: center;
+}
+
+.success-dialog-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  padding: 0;
+  color: var(--color-brand-slate);
+  background: var(--color-white);
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.success-dialog h2 {
+  margin: 0;
+  padding: 0 24px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.success-dialog p {
+  margin: 12px 0 22px;
+  color: var(--color-brand-slate);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.success-dialog-confirm {
+  width: 100%;
+}
+
 .forgot-link {
   justify-self: center;
   min-height: 24px;
@@ -329,6 +386,10 @@ input {
   .auth-status {
     left: 20px;
     right: 20px;
+  }
+
+  .success-dialog-content {
+    padding: 26px 22px 22px;
   }
 
   .auth-tabs {

@@ -7,7 +7,12 @@
   const loginForm = document.querySelector('[data-auth-panel="login"]');
   const registerForm = document.querySelector('[data-auth-panel="register"]');
   const forgotButton = document.querySelector("[data-forgot-password]");
+  const registrationSuccessDialog = document.querySelector("[data-registration-success]");
+  const registrationSuccessClose = document.querySelector("[data-registration-success-close]");
+  const registrationSuccessConfirm = document.querySelector("[data-registration-success-confirm]");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let registeredEmail = "";
+  let registrationCompleted = false;
 
   function setStatus(message, isError = false) {
     status.textContent = message;
@@ -34,6 +39,25 @@
     setStatus("");
   }
 
+  function showRegistrationSuccess(email) {
+    registeredEmail = email;
+    registrationCompleted = true;
+    setStatus("");
+    registrationSuccessDialog.showModal();
+  }
+
+  function returnToLogin() {
+    if (!registrationCompleted) return;
+
+    registrationCompleted = false;
+    if (registrationSuccessDialog.open) registrationSuccessDialog.close();
+
+    setMode("login");
+    loginForm.elements.email.value = registeredEmail;
+    registerForm.reset();
+    loginForm.elements.password.focus();
+  }
+
   async function requestJson(url, body) {
     const response = await fetch(url, {
       method: "POST",
@@ -57,6 +81,17 @@
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => setMode(tab.dataset.authMode));
+  });
+
+  registrationSuccessClose.addEventListener("click", returnToLogin);
+  registrationSuccessConfirm.addEventListener("click", returnToLogin);
+  registrationSuccessDialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    returnToLogin();
+  });
+  registrationSuccessDialog.addEventListener("close", returnToLogin);
+  registrationSuccessDialog.addEventListener("click", (event) => {
+    if (event.target === registrationSuccessDialog) returnToLogin();
   });
 
   document.querySelectorAll("[data-mobile-nav-lottie]").forEach((target) => {
@@ -151,7 +186,11 @@
         acceptedTerms
       });
 
-      setStatus(payload.passwordDelivery === "email" ? "Пароль отправлен на почту." : "Регистрация выполнена.");
+      if (payload.passwordDelivery === "email") {
+        showRegistrationSuccess(email);
+      } else {
+        setStatus("Регистрация выполнена.");
+      }
     } catch (error) {
       const message = {
         INVALID_INVITATION: "Код приглашения недействителен.",
