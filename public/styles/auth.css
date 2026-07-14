@@ -237,55 +237,33 @@ input {
 }
 
 .footer-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
   padding-top: 14px;
   border-top: 2px solid var(--color-brand-slate);
 }
 
-.footer-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 10px;
-}
-
-.footer-copy {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--color-white);
-  font-size: 12px;
-  font-weight: 900;
-  line-height: 1.2;
-}
-
-.footer-lottie {
-  width: 22px;
-  height: 22px;
-  flex: 0 0 auto;
-}
-
-.footer-details {
+.footer-legal,
+.footer-address {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  gap: 4px;
   color: var(--color-brand-mist);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
-.footer-contacts {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.footer-contacts a {
+.footer-legal strong,
+.footer-address a {
   color: var(--color-white);
+  font-weight: 900;
   text-decoration: none;
+}
+
+.footer-address {
+  justify-items: end;
+  text-align: right;
 }
 
 .mobile-nav {
@@ -322,49 +300,31 @@ input {
   }
 
   .site-footer {
-    padding: 0 16px 112px;
+    padding: 0 16px 148px;
   }
 
   .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 9px;
     padding-top: 10px;
     border-top: 0;
   }
 
-  .footer-top {
-    display: grid;
+  .footer-legal,
+  .footer-address {
     justify-items: center;
-    gap: 7px;
-    margin-bottom: 7px;
-    text-align: center;
-  }
-
-  .footer-copy {
-    justify-content: center;
-    gap: 6px;
-    font-size: 10px;
-  }
-
-  .footer-lottie {
-    width: 18px;
-    height: 18px;
-  }
-
-  .footer-contacts {
-    justify-content: center;
-    gap: 12px;
-    font-size: 10px;
-    line-height: 1.2;
-  }
-
-  .footer-details {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 4px 10px;
-    color: var(--color-brand-mist);
     font-size: 9px;
     line-height: 1.25;
     text-align: center;
+  }
+
+  .footer-legal {
+    gap: 3px;
+  }
+
+  .footer-address {
+    gap: 3px;
+    font-size: 8px;
   }
 
   .mobile-nav {

@@ -6,7 +6,6 @@
   const loginForm = document.querySelector('[data-auth-panel="login"]');
   const registerForm = document.querySelector('[data-auth-panel="register"]');
   const forgotButton = document.querySelector("[data-forgot-password]");
-  const footerLottie = document.querySelector("[data-footer-lottie]");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function setStatus(message, isError = false) {
@@ -56,11 +55,6 @@
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => setMode(tab.dataset.authMode));
-  });
-
-  window.TenderlandLottie?.mount(footerLottie, {
-    autoplay: true,
-    loop: true
   });
 
   document.querySelectorAll("[data-mobile-nav-lottie]").forEach((target) => {
