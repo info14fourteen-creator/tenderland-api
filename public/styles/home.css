@@ -104,17 +104,17 @@ body {
 }
 
 .home-body.is-left-panel-collapsed .home-page {
-  --home-left-panel-width: 72px;
+  --home-left-panel-width: 85px;
 }
 
 .home-body.is-left-panel-collapsed .home-sidebar-nav {
-  padding-inline: 12px;
+  padding-inline: 16px;
 }
 
 .home-body.is-left-panel-collapsed .home-sidebar-item {
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0;
-  padding-inline: 6px;
+  padding-inline: 10px;
 }
 
 .home-body.is-left-panel-collapsed .home-sidebar-label {
