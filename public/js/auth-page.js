@@ -6,24 +6,19 @@
   const loginForm = document.querySelector('[data-auth-panel="login"]');
   const registerForm = document.querySelector('[data-auth-panel="register"]');
   const forgotButton = document.querySelector("[data-forgot-password]");
-  const cornerLottie = document.querySelector("[data-auth-corner-lottie]");
-  const cornerLottiePaths = {
-    login: "/assets/login-animation.json",
-    register: "/assets/register-button-animation.json"
-  };
-  let cornerAnimation = null;
-  let cornerAnimationMode = "";
+  const cornerAnimations = new Map();
 
   function syncCornerAnimation(mode) {
-    if (!cornerLottie || cornerAnimationMode === mode) return;
+    cornerAnimations.forEach(({ animation, target }, animationMode) => {
+      const isActive = animationMode === mode;
+      target.classList.toggle("is-active", isActive);
 
-    cornerAnimation?.destroy();
-    cornerAnimation = window.TenderlandLottie?.mount(cornerLottie, {
-      autoplay: true,
-      loop: true,
-      path: cornerLottiePaths[mode]
+      if (isActive) {
+        animation.play();
+      } else {
+        animation.goToAndStop(0, true);
+      }
     });
-    cornerAnimationMode = mode;
   }
 
   function setStatus(message, isError = false) {
@@ -74,6 +69,17 @@
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => setMode(tab.dataset.authMode));
+  });
+
+  document.querySelectorAll("[data-auth-corner-lottie]").forEach((target) => {
+    const animation = window.TenderlandLottie?.mount(target, {
+      autoplay: false,
+      loop: true
+    });
+
+    if (animation) {
+      cornerAnimations.set(target.dataset.authCornerLottie, { animation, target });
+    }
   });
 
   loginForm.addEventListener("submit", async (event) => {

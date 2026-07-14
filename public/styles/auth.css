@@ -54,10 +54,19 @@ input {
   right: 12px;
   width: 46px;
   height: 46px;
-  padding: 4px;
   border: 2px solid var(--color-brand-cyan);
   border-radius: 8px;
   background: var(--color-white);
+}
+
+.corner-lottie-item {
+  position: absolute;
+  inset: 4px;
+  visibility: hidden;
+}
+
+.corner-lottie-item.is-active {
+  visibility: visible;
 }
 
 .auth-brand {
