@@ -10,7 +10,6 @@
   const registrationSuccessDialog = document.querySelector("[data-registration-success]");
   const registrationSuccessClose = document.querySelector("[data-registration-success-close]");
   const registrationSuccessConfirm = document.querySelector("[data-registration-success-confirm]");
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let registeredEmail = "";
   let registrationCompleted = false;
 
@@ -92,43 +91,6 @@
   registrationSuccessDialog.addEventListener("close", returnToLogin);
   registrationSuccessDialog.addEventListener("click", (event) => {
     if (event.target === registrationSuccessDialog) returnToLogin();
-  });
-
-  document.querySelectorAll("[data-mobile-nav-lottie]").forEach((target) => {
-    const item = target.closest(".mobile-nav-item");
-    const isActive = item?.classList.contains("is-active");
-    const animation = window.TenderlandLottie?.mount(target, {
-      autoplay: false,
-      loop: true
-    });
-
-    if (!animation) return;
-
-    let releaseTimer = null;
-
-    const play = () => {
-      window.clearTimeout(releaseTimer);
-      if (!prefersReducedMotion) animation.goToAndPlay(0, true);
-    };
-
-    const stopIfInactive = () => {
-      if (isActive) return;
-      window.clearTimeout(releaseTimer);
-      releaseTimer = window.setTimeout(() => animation.goToAndStop(0, true), 420);
-    };
-
-    if (isActive && !prefersReducedMotion) {
-      animation.play();
-    } else {
-      animation.goToAndStop(0, true);
-    }
-
-    item?.addEventListener("pointerdown", play);
-    item?.addEventListener("pointerup", stopIfInactive);
-    item?.addEventListener("pointercancel", stopIfInactive);
-    item?.addEventListener("pointerleave", stopIfInactive);
-    item?.addEventListener("focus", play);
-    item?.addEventListener("blur", stopIfInactive);
   });
 
   loginForm.addEventListener("submit", async (event) => {

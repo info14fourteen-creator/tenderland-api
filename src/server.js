@@ -15,15 +15,17 @@ const pagesDir = join(viewsDir, "pages");
 const partialsDir = join(viewsDir, "partials");
 
 async function renderPublicPage(filename) {
-  const [page, header, footer] = await Promise.all([
+  const [page, header, footer, mobileNav] = await Promise.all([
     readFile(join(pagesDir, filename), "utf8"),
     readFile(join(partialsDir, "site-header.html"), "utf8"),
-    readFile(join(partialsDir, "site-footer.html"), "utf8")
+    readFile(join(partialsDir, "site-footer.html"), "utf8"),
+    readFile(join(partialsDir, "mobile-nav.html"), "utf8")
   ]);
 
   return page
     .replace("<!-- SITE_HEADER -->", header)
-    .replace("<!-- SITE_FOOTER -->", footer);
+    .replace("<!-- SITE_FOOTER -->", footer)
+    .replace("<!-- MOBILE_NAV -->", mobileNav);
 }
 
 function publicPage(filename) {

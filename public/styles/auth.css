@@ -291,10 +291,6 @@ input {
   margin-top: -4px;
 }
 
-.mobile-nav {
-  display: none;
-}
-
 .legal-page {
   padding: 52px 32px 64px;
   color: var(--color-brand-navy);
@@ -422,59 +418,6 @@ input {
     font-size: 18px;
   }
 
-  .mobile-nav {
-    position: fixed;
-    left: 10px;
-    right: 10px;
-    bottom: 8px;
-    z-index: 20;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    align-items: end;
-    gap: 0;
-    padding: 4px 6px 6px;
-    border-radius: 8px;
-    background: var(--color-white);
-  }
-
-  .mobile-nav-item {
-    display: grid;
-    grid-template-rows: 64px 10px;
-    place-items: end center;
-    gap: 0;
-    min-width: 0;
-    color: var(--color-brand-navy);
-    text-decoration: none;
-    font-size: 8px;
-    font-weight: 900;
-    line-height: 1;
-  }
-
-  .mobile-nav-item span:last-child {
-    align-self: end;
-    min-height: 10px;
-    line-height: 10px;
-  }
-
-  .mobile-nav-item.is-active {
-    color: var(--color-brand-blue);
-  }
-
-  .mobile-nav-icon {
-    display: block;
-    width: 36px;
-    height: 36px;
-    align-self: end;
-    padding: 0;
-    border-radius: 8px;
-    background: transparent;
-  }
-
-  .mobile-nav-item.is-primary .mobile-nav-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
