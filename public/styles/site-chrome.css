@@ -43,6 +43,10 @@
   object-fit: contain;
 }
 
+.site-logo .site-logo-mark {
+  display: none;
+}
+
 .site-footer {
   flex: 0 0 auto;
   padding: 0 32px 22px;
@@ -94,6 +98,16 @@
 }
 
 @media (max-width: 768px) {
+  .site-logo .site-logo-wordmark {
+    display: none;
+  }
+
+  .site-logo .site-logo-mark {
+    display: block;
+    width: 36px;
+    height: 36px;
+  }
+
   .has-mobile-nav .site-footer {
     padding-bottom: 118px;
   }
@@ -102,11 +116,6 @@
 @media (max-width: 440px) {
   .site-header {
     padding: 16px 16px 6px;
-  }
-
-  .site-logo img {
-    width: 86px;
-    height: 40px;
   }
 
   .site-footer {
