@@ -6,15 +6,13 @@
   const token = window.localStorage.getItem("tenderland_token")
     || window.sessionStorage.getItem("tenderland_token");
   let panelToggleAnimation = null;
-  let panelToggleTimer = null;
-  let panelIsAnimating = false;
 
-  function mountPanelToggleAnimation(path) {
+  function mountPanelToggleAnimation() {
     panelToggleAnimation?.destroy();
     panelToggleIcon.replaceChildren();
-    panelToggleIcon.dataset.lottiePath = path;
+    panelToggleIcon.dataset.lottiePath = "/assets/panel-toggle.json";
     panelToggleAnimation = window.TenderlandLottie?.mount(panelToggleIcon, {
-      path,
+      path: "/assets/panel-toggle.json",
       autoplay: false,
       loop: false
     });
@@ -31,23 +29,12 @@
   }
 
   if (panelToggle && panelToggleIcon) {
-    mountPanelToggleAnimation("/assets/panel-collapse.json");
+    mountPanelToggleAnimation();
     panelToggle.addEventListener("click", () => {
-      if (panelIsAnimating) return;
-
-      panelIsAnimating = true;
-      window.clearTimeout(panelToggleTimer);
       if (!prefersReducedMotion) panelToggleAnimation?.goToAndPlay(0, true);
 
       const isCollapsed = !document.body.classList.contains("is-left-panel-collapsed");
       setPanelCollapsed(isCollapsed);
-
-      panelToggleTimer = window.setTimeout(() => {
-        mountPanelToggleAnimation(isCollapsed
-          ? "/assets/panel-expand.json"
-          : "/assets/panel-collapse.json");
-        panelIsAnimating = false;
-      }, prefersReducedMotion ? 0 : 1000);
     });
   }
 
