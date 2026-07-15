@@ -7,10 +7,10 @@
     <span class="mobile-nav-icon" data-mobile-nav-lottie data-lottie-path="/assets/mobile-tasks.json" aria-hidden="true"></span>
     <span>Задачи</span>
   </a>
-  <a class="mobile-nav-item is-primary" href="/home" aria-label="Меню">
+  <button class="mobile-nav-item is-primary" type="button" data-mobile-menu-toggle aria-label="Меню" aria-expanded="false" aria-controls="mobile-workspace-menu">
     <span class="mobile-nav-icon" data-mobile-nav-lottie data-lottie-path="/assets/mobile-menu.json" aria-hidden="true"></span>
     <span>Меню</span>
-  </a>
+  </button>
   <a class="mobile-nav-item" href="/home" aria-label="Поиск">
     <span class="mobile-nav-icon" data-mobile-nav-lottie data-lottie-path="/assets/mobile-search.json" aria-hidden="true"></span>
     <span>Поиск</span>
@@ -20,3 +20,18 @@
     <span>Помощь</span>
   </a>
 </nav>
+
+<div class="mobile-menu-layer" data-mobile-menu-layer hidden>
+  <button class="mobile-menu-backdrop" type="button" data-mobile-menu-close aria-label="Закрыть меню"></button>
+  <section class="mobile-menu-sheet" id="mobile-workspace-menu" role="dialog" aria-modal="true" aria-label="Разделы Kortex CRM">
+    <header class="mobile-menu-heading">
+      <strong>Меню</strong>
+      <button type="button" data-mobile-menu-close aria-label="Закрыть меню" title="Закрыть меню">&times;</button>
+    </header>
+    <nav class="mobile-menu-links" aria-label="Разделы приложения">
+      <a href="/home" data-mobile-menu-route="/home">Главная</a>
+      <a href="/procedures" data-mobile-menu-route="/procedures">Процедуры</a>
+      <a href="/api-docs" data-mobile-menu-route="/api-docs">Tenderland API</a>
+    </nav>
+  </section>
+</div>

@@ -1,6 +1,14 @@
 (function () {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+  const menuToggle = document.querySelector("[data-mobile-menu-toggle]");
+  const menuLayer = document.querySelector("[data-mobile-menu-layer]");
+
+  document.querySelectorAll("[data-mobile-menu-route]").forEach((item) => {
+    const isActive = item.dataset.mobileMenuRoute === currentPath;
+    item.classList.toggle("is-active", isActive);
+    if (isActive) item.setAttribute("aria-current", "page");
+  });
 
   document.querySelectorAll("[data-mobile-nav-route]").forEach((item) => {
     const isActive = item.dataset.mobileNavRoute === currentPath;
@@ -42,5 +50,28 @@
     item?.addEventListener("pointerleave", stopIfInactive);
     item?.addEventListener("focus", play);
     item?.addEventListener("blur", stopIfInactive);
+  });
+
+  function setMenuOpen(isOpen) {
+    if (!menuToggle || !menuLayer) return;
+    menuLayer.hidden = !isOpen;
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.classList.toggle("is-active", isOpen);
+    document.body.classList.toggle("is-mobile-menu-open", isOpen);
+    if (isOpen) menuLayer.querySelector("a")?.focus();
+  }
+
+  menuToggle?.addEventListener("click", () => {
+    setMenuOpen(menuToggle.getAttribute("aria-expanded") !== "true");
+  });
+
+  document.querySelectorAll("[data-mobile-menu-close]").forEach((button) => {
+    button.addEventListener("click", () => setMenuOpen(false));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || menuLayer?.hidden) return;
+    setMenuOpen(false);
+    menuToggle?.focus();
   });
 })();

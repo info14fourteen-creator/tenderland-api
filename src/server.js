@@ -6,10 +6,12 @@ import { config } from "./config.js";
 import { getPool } from "./db.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import procedureRoutes from "./routes/procedureRoutes.js";
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(__dirname, "..", "public");
+const lucideDir = join(__dirname, "..", "node_modules", "lucide", "dist", "umd");
 const viewsDir = join(__dirname, "views");
 const pagesDir = join(viewsDir, "pages");
 const partialsDir = join(viewsDir, "partials");
@@ -58,9 +60,11 @@ app.get("/health", async (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/procedures", procedureRoutes);
 
 app.get("/", publicPage("index.html"));
 app.get(["/home", "/home/"], publicPage("home.html"));
+app.get(["/procedures", "/procedures/"], publicPage("procedures.html"));
 app.get(["/account", "/account/"], publicPage("account.html"));
 app.get(["/api-docs", "/api-docs/"], publicPage("api-docs.html"));
 app.get(["/terms", "/terms/"], publicPage("terms.html"));
@@ -73,6 +77,7 @@ app.get("/terms.html", (_req, res) => res.redirect(308, "/terms"));
 app.get("/privacy.html", (_req, res) => res.redirect(308, "/privacy"));
 app.get("/brandbook/index.html", (_req, res) => res.redirect(308, "/brandbook/"));
 
+app.use("/vendor/lucide", express.static(lucideDir));
 app.use(express.static(publicDir));
 
 app.get(/^\/(?!api).*/, async (req, res, next) => {

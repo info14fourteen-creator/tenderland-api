@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Процедуры Kortex CRM">
+    <title>Процедуры — Kortex Capital</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/styles/site-chrome.css">
+    <link rel="stylesheet" href="/styles/mobile-nav.css">
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/procedures.css">
+  </head>
+  <body class="home-body procedures-body has-mobile-nav">
+    <div class="site-shell home-shell">
+      <!-- SITE_HEADER -->
+
+      <main class="home-page procedures-page" aria-label="Процедуры">
+        <!-- WORKSPACE_SIDEBAR -->
+
+        <section class="home-workspace procedures-workspace">
+          <header class="procedures-toolbar">
+            <div class="procedures-heading">
+              <h1>Процедуры</h1>
+              <span class="procedures-total" data-procedures-total aria-live="polite">0</span>
+            </div>
+
+            <div class="procedures-toolbar-actions">
+              <div class="view-switcher" role="group" aria-label="Способ отображения">
+                <button class="view-switcher-button" type="button" data-procedures-view="kanban" aria-pressed="false">
+                  <i data-lucide="columns-3" aria-hidden="true"></i>
+                  <span>Канбан</span>
+                </button>
+                <button class="view-switcher-button" type="button" data-procedures-view="list" aria-pressed="true">
+                  <i data-lucide="list" aria-hidden="true"></i>
+                  <span>Список</span>
+                </button>
+                <button class="view-switcher-button" type="button" data-procedures-view="cards" aria-pressed="false">
+                  <i data-lucide="layout-grid" aria-hidden="true"></i>
+                  <span>Карточки</span>
+                </button>
+              </div>
+
+              <button class="procedures-refresh" type="button" data-procedures-refresh aria-label="Обновить процедуры" title="Обновить процедуры">
+                <i data-lucide="refresh-cw" aria-hidden="true"></i>
+              </button>
+            </div>
+          </header>
+
+          <div class="procedures-content" data-procedures-content aria-live="polite">
+            <div class="procedures-state">
+              <span class="procedures-loader" aria-hidden="true"></span>
+              <p>Загружаем процедуры</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="home-panel home-panel-right procedures-summary-panel" aria-label="Сводка по процедурам">
+          <div class="procedures-summary">
+            <h2>Сводка</h2>
+            <dl>
+              <div>
+                <dt>Всего</dt>
+                <dd data-procedures-summary-total>0</dd>
+              </div>
+              <div>
+                <dt>Завершаются за 7 дней</dt>
+                <dd data-procedures-summary-deadline>0</dd>
+              </div>
+              <div>
+                <dt>Без стадии</dt>
+                <dd data-procedures-summary-unassigned>0</dd>
+              </div>
+            </dl>
+          </div>
+        </aside>
+      </main>
+
+      <!-- SITE_FOOTER -->
+
+      <!-- MOBILE_NAV -->
+    </div>
+
+    <script src="/vendor/lottie.min.js"></script>
+    <script src="/vendor/lucide/lucide.min.js"></script>
+    <script src="/js/lottie-loader.js"></script>
+    <script src="/js/mobile-nav.js"></script>
+    <script src="/js/home-page.js"></script>
+    <script src="/js/procedures-page.js"></script>
+  </body>
+</html>
