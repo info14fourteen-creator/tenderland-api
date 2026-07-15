@@ -11,7 +11,8 @@ const migrations = [
   "004_split_categories_and_roles.sql",
   "005_add_business_roles_array.sql",
   "006_add_legal_acceptance.sql",
-  "007_create_procedures_and_contracts.sql"
+  "007_create_procedures_and_contracts.sql",
+  "008_create_companies_and_contacts.sql"
 ];
 
 for (const migration of migrations) {
