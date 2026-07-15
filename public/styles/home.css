@@ -267,10 +267,6 @@ body {
   background: var(--color-white);
 }
 
-.home-panel-right {
-  border-left: 1px solid var(--color-brand-mist);
-}
-
 .account-workspace {
   display: grid;
   place-items: center;
