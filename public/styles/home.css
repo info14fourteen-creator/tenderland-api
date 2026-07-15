@@ -43,7 +43,7 @@ body {
   position: relative;
   display: block;
   min-width: 0;
-  margin: 0 24px;
+  margin: 0;
 }
 
 .workspace-search-input {
