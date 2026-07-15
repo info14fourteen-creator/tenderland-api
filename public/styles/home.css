@@ -251,6 +251,10 @@ body {
   opacity: 0;
 }
 
+.home-body.is-left-panel-collapsed .site-header-brand {
+  padding-left: 16px;
+}
+
 .home-body.is-left-panel-collapsed .site-logo .site-logo-wordmark {
   display: none;
 }
