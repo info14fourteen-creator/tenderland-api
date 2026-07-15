@@ -15,17 +15,19 @@ const pagesDir = join(viewsDir, "pages");
 const partialsDir = join(viewsDir, "partials");
 
 async function renderPublicPage(filename) {
-  const [page, header, footer, mobileNav] = await Promise.all([
+  const [page, header, footer, mobileNav, workspaceSidebar] = await Promise.all([
     readFile(join(pagesDir, filename), "utf8"),
     readFile(join(partialsDir, "site-header.html"), "utf8"),
     readFile(join(partialsDir, "site-footer.html"), "utf8"),
-    readFile(join(partialsDir, "mobile-nav.html"), "utf8")
+    readFile(join(partialsDir, "mobile-nav.html"), "utf8"),
+    readFile(join(partialsDir, "workspace-sidebar.html"), "utf8")
   ]);
 
   return page
     .replace("<!-- SITE_HEADER -->", header)
     .replace("<!-- SITE_FOOTER -->", footer)
-    .replace("<!-- MOBILE_NAV -->", mobileNav);
+    .replace("<!-- MOBILE_NAV -->", mobileNav)
+    .replace("<!-- WORKSPACE_SIDEBAR -->", workspaceSidebar);
 }
 
 function publicPage(filename) {
@@ -60,6 +62,7 @@ app.use("/api/admin", adminRoutes);
 app.get("/", publicPage("index.html"));
 app.get(["/home", "/home/"], publicPage("home.html"));
 app.get(["/account", "/account/"], publicPage("account.html"));
+app.get(["/api-docs", "/api-docs/"], publicPage("api-docs.html"));
 app.get(["/terms", "/terms/"], publicPage("terms.html"));
 app.get(["/privacy", "/privacy/"], publicPage("privacy.html"));
 app.get(/^\/brandbook$/, (_req, res) => res.redirect(308, "/brandbook/"));

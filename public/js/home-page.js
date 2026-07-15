@@ -1,7 +1,7 @@
 (function () {
   const panelToggle = document.querySelector("[data-home-panel-toggle]");
   const panelToggleIcon = document.querySelector("[data-home-panel-toggle-lottie]");
-  const sidebarHomeIcon = document.querySelector("[data-home-sidebar-lottie]");
+  const sidebarItems = document.querySelectorAll("[data-workspace-route]");
   const searchForm = document.querySelector("[data-workspace-search]");
   const searchInput = searchForm?.querySelector(".workspace-search-input");
   const searchIcon = document.querySelector("[data-workspace-search-lottie]");
@@ -46,18 +46,20 @@
     });
   }
 
-  const sidebarHomeItem = sidebarHomeIcon?.closest("[data-workspace-route]");
-  const isHomeActive = currentPath === "/home";
-  sidebarHomeItem?.classList.toggle("is-active", isHomeActive);
-  if (isHomeActive) sidebarHomeItem?.setAttribute("aria-current", "page");
+  sidebarItems.forEach((item) => {
+    const isActive = item.dataset.workspaceRoute === currentPath;
+    const icon = item.querySelector("[data-workspace-sidebar-lottie]");
+    item.classList.toggle("is-active", isActive);
+    if (isActive) item.setAttribute("aria-current", "page");
 
-  const sidebarHomeAnimation = window.TenderlandLottie?.mount(sidebarHomeIcon, {
-    autoplay: isHomeActive && !prefersReducedMotion,
-    loop: true
-  });
-  if (!isHomeActive || prefersReducedMotion) sidebarHomeAnimation?.goToAndStop(0, true);
-  sidebarHomeItem?.addEventListener("pointerdown", () => {
-    if (!prefersReducedMotion) sidebarHomeAnimation?.goToAndPlay(0, true);
+    const animation = window.TenderlandLottie?.mount(icon, {
+      autoplay: isActive && !prefersReducedMotion,
+      loop: true
+    });
+    if (!isActive || prefersReducedMotion) animation?.goToAndStop(0, true);
+    item.addEventListener("pointerdown", () => {
+      if (!prefersReducedMotion) animation?.goToAndPlay(0, true);
+    });
   });
 
   const searchAnimation = window.TenderlandLottie?.mount(searchIcon, {

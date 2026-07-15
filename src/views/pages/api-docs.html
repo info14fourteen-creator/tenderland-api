@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Инструкция по интеграции Kortex Capital с Tenderland API">
+    <title>Tenderland API — Kortex Capital</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/styles/site-chrome.css">
+    <link rel="stylesheet" href="/styles/mobile-nav.css">
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/api-docs.css">
+  </head>
+  <body class="home-body api-docs-body has-mobile-nav">
+    <div class="site-shell home-shell">
+      <!-- SITE_HEADER -->
+
+      <main class="home-page api-docs-page" aria-label="Документация Tenderland API">
+        <!-- WORKSPACE_SIDEBAR -->
+
+        <section class="home-workspace api-docs-workspace">
+          <article class="api-docs">
+            <header class="api-docs-heading">
+              <p class="api-docs-version">Tenderland API v1 · редакция от 23 июня 2026 года</p>
+              <h1>Tenderland API</h1>
+              <p>Практическая инструкция по подключению, получению тендеров, работе с поиском, файлами, вебхуками и лимитами.</p>
+            </header>
+
+            <dl class="api-docs-facts" aria-label="Основные параметры API">
+              <div>
+                <dt>Базовый адрес</dt>
+                <dd><code>https://tenderland.ru/Api/v1</code></dd>
+              </div>
+              <div>
+                <dt>Авторизация</dt>
+                <dd><code>Tenderland-Api-Key</code></dd>
+              </div>
+              <div>
+                <dt>Форматы</dt>
+                <dd>JSON и XML</dd>
+              </div>
+            </dl>
+
+            <section class="api-docs-section" id="start">
+              <h2>Начало работы</h2>
+              <p>Ключ хранится только на сервере в переменной <code>TENDERLAND_API_KEY</code>. Не добавляйте его в HTML, клиентский JavaScript, URL интерфейса, логи или репозиторий.</p>
+              <p>API принимает ключ и в параметре <code>apiKey</code>, но для Kortex используем HTTP-заголовок: так секрет не попадает в историю браузера и журналы прокси.</p>
+
+              <h3>Проверка подключения</h3>
+              <pre><code>curl "https://tenderland.ru/Api/v1/User/GetStatistic" \
+  -H "Tenderland-Api-Key: $TENDERLAND_API_KEY"</code></pre>
+
+              <h3>Серверный запрос на Node.js</h3>
+              <pre><code>const response = await fetch(
+  `${process.env.TENDERLAND_API_BASE_URL}/User/GetStatistic`,
+  {
+    headers: {
+      "Tenderland-Api-Key": process.env.TENDERLAND_API_KEY
+    }
+  }
+);
+
+if (!response.ok) {
+  throw new Error(`Tenderland API: ${response.status}`);
+}
+
+const statistic = await response.json();</code></pre>
+            </section>
+
+            <section class="api-docs-section" id="modules">
+              <h2>Модули и способы интеграции</h2>
+              <div class="api-docs-columns">
+                <div>
+                  <h3>API</h3>
+                  <p>Выгружает данные из сохранённых автопоисков по выбранной форме отчёта. Доступен широкий набор полей. Подходит для регулярной синхронизации.</p>
+                </div>
+                <div>
+                  <h3>API Поиск</h3>
+                  <p>Выполняет динамический поиск без заранее созданного автопоиска методом <code>Search/Find</code>. Подключается и оплачивается отдельно.</p>
+                </div>
+                <div>
+                  <h3>Webhook</h3>
+                  <p>Tenderland сам отправляет новые данные методом POST на конечную точку Kortex. Получатель подтверждает страницу ответом HTTP 200.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="api-docs-section" id="export">
+              <h2>Выгрузка из автопоиска</h2>
+              <ol class="api-docs-steps">
+                <li><strong>Получите автопоиски.</strong> Вызовите <code>Dictionary/GetAutosearchList</code> и выберите <code>Id</code>.</li>
+                <li><strong>Получите формы отчётов.</strong> Вызовите <code>Dictionary/GetExportViewList</code> и выберите <code>Id</code> отчёта.</li>
+                <li><strong>Создайте задачу.</strong> Передайте <code>autosearchId</code> и <code>exportViewId</code> в <code>Export/Create</code>.</li>
+                <li><strong>Читайте последовательно.</strong> Передавайте полученный <code>exportId</code> в <code>Export/Get</code>, увеличивая <code>offset</code> на <code>batchSize</code>.</li>
+              </ol>
+
+              <pre><code># 1. Создать задачу
+curl "https://tenderland.ru/Api/v1/Export/Create?autosearchId=123&amp;exportViewId=456&amp;batchSize=100&amp;format=json" \
+  -H "Tenderland-Api-Key: $TENDERLAND_API_KEY"
+
+# 2. Прочитать страницы: 0, 100, 200...
+curl "https://tenderland.ru/Api/v1/Export/Get?exportId=789&amp;offset=0" \
+  -H "Tenderland-Api-Key: $TENDERLAND_API_KEY"</code></pre>
+
+              <div class="api-docs-note">
+                <strong>Важно.</strong> Не отправляйте параллельные запросы <code>Export/Get</code> для одной задачи. Следующая страница запрашивается только после ответа на предыдущую. Разные задачи можно читать параллельно.
+              </div>
+
+              <h3>Инкрементальная синхронизация</h3>
+              <p>Чтобы получать только новые или изменённые записи, храните контрольную точку в Kortex и при следующем запуске передавайте один из параметров:</p>
+              <div class="api-docs-table-wrap">
+                <table>
+                  <thead><tr><th>Параметр</th><th>Назначение</th><th>Формат</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>searchAfterCreateDate</code></td><td>Создано в Tenderland не раньше даты</td><td>UTC, ISO 8601</td></tr>
+                    <tr><td><code>searchAfterUpdateDate</code></td><td>Обновлено в Tenderland не раньше даты</td><td>UTC, ISO 8601</td></tr>
+                    <tr><td><code>searchAfterId</code></td><td>Идентификатор не меньше указанного</td><td><code>TL\d+</code></td></tr>
+                    <tr><td><code>searchAfterFilter</code></td><td>Применить условие к конкретной сущности</td><td><code>tender</code>, <code>contract</code>, <code>position</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Параметры <code>searchAfterCreateDate</code>, <code>searchAfterUpdateDate</code> и <code>searchAfterId</code> взаимоисключающие. Для защиты от записей с одинаковым временем храните идентификаторы обработанных сущностей и делайте загрузку идемпотентной.</p>
+            </section>
+
+            <section class="api-docs-section" id="search">
+              <h2>Поиск</h2>
+              <h3>По номеру или идентификатору</h3>
+              <p><code>Search/Get</code> принимает через запятую реестровые номера или идентификаторы Tenderland. Для организаций при подключённом модуле «API Ревизор» можно передавать ОГРН, ИНН или название.</p>
+              <pre><code>curl "https://tenderland.ru/Api/v1/Search/Get?keys=TL12345&amp;entityType=tender&amp;strictMatch=true&amp;hideSensitiveApiData=true" \
+  -H "Tenderland-Api-Key: $TENDERLAND_API_KEY"</code></pre>
+
+              <h3>Динамический поиск</h3>
+              <p><code>POST Search/Find</code> относится к отдельному модулю «API Поиск». Надёжнее всего создать автопоиск в интерфейсе Tenderland, получить его JSON через <code>Search/GetAutosearch</code>, а затем менять нужные фильтры на сервере Kortex.</p>
+              <pre><code>curl -X POST "https://tenderland.ru/Api/v1/Search/Find" \
+  -H "Tenderland-Api-Key: $TENDERLAND_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fields": ["tender_regNumber", "tender_name", "tender_endDate"],
+    "filters": {"and": []},
+    "interval": [0, 1],
+    "pageSize": 30,
+    "skip": 0
+  }'</code></pre>
+              <p>Для последующей полной выгрузки результатов укажите <code>pageSize: 0</code>, возьмите идентификатор поисковой сессии и передайте его как <code>sessionId</code> в <code>Export/Create</code>.</p>
+            </section>
+
+            <section class="api-docs-section" id="webhooks">
+              <h2>Webhook</h2>
+              <ol class="api-docs-steps">
+                <li>В панели Tenderland откройте «Панель управления API» → «Интеграция».</li>
+                <li>Выберите автопоиск, отчёт, JSON или XML, интервал 15/30/60 минут и размер страницы.</li>
+                <li>Укажите HTTPS-адрес обработчика Kortex и при необходимости включите обновления и GZIP.</li>
+                <li>Сохраняйте данные идемпотентно и возвращайте HTTP 200 только после успешной обработки всей страницы.</li>
+              </ol>
+              <p>Один цикл содержит не более пяти страниц. Если обработка длится дольше 30 секунд или ответ отличается от 200, цикл останавливается и следующая попытка начинается с той же страницы.</p>
+              <div class="api-docs-note">
+                Для теста используйте принудительную отправку. Пока обработка не подтверждена статусом 200, Tenderland повторяет ту же страницу и не списывает лимит за доставленные данные.
+              </div>
+            </section>
+
+            <section class="api-docs-section" id="methods">
+              <h2>Каталог методов</h2>
+
+              <details class="api-endpoint-group" open>
+                <summary>Справочники</summary>
+                <div class="api-endpoint-list">
+                  <div><span class="http-method">GET</span><code>/Dictionary/GetAutosearchList</code><p>Список автопоисков и их модулей.</p></div>
+                  <div><span class="http-method">GET</span><code>/Dictionary/GetExportViewList</code><p>Список отчётов и полей каждого отчёта.</p></div>
+                  <div><span class="http-method">GET</span><code>/Dictionary/GetFieldList</code><p>Поля, доступность в поиске/выгрузке и возможность сортировки.</p></div>
+                  <div><span class="http-method">GET</span><code>/Dictionary/GetFilterList</code><p>Фильтры, типы, модули и ссылки на допустимые значения.</p></div>
+                  <div><span class="http-method">GET</span><code>/Dictionary/Get</code><p>Значения справочника по параметру <code>name</code>.</p></div>
+                </div>
+              </details>
+
+              <details class="api-endpoint-group" open>
+                <summary>Выгрузка и поиск</summary>
+                <div class="api-endpoint-list">
+                  <div><span class="http-method">GET</span><code>/Export/Create</code><p>Создать задачу из <code>autosearchId</code> или <code>sessionId</code>.</p></div>
+                  <div><span class="http-method">GET</span><code>/Export/Get</code><p>Прочитать страницу задачи по <code>exportId</code> и <code>offset</code>.</p></div>
+                  <div><span class="http-method">GET</span><code>/Search/Get</code><p>Найти сущности по номерам, идентификаторам или реквизитам.</p></div>
+                  <div><span class="http-method http-method-post">POST</span><code>/Search/Find</code><p>Выполнить динамический поиск по JSON-набору фильтров.</p></div>
+                  <div><span class="http-method">GET</span><code>/Search/GetAutosearch</code><p>Получить JSON настроек сохранённого автопоиска.</p></div>
+                </div>
+              </details>
+
+              <details class="api-endpoint-group">
+                <summary>Файлы и документы</summary>
+                <div class="api-endpoint-list">
+                  <div><span class="http-method">GET</span><code>/File/GetEntityFileList</code><p>Список файлов тендера, контракта или позиции плана.</p></div>
+                  <div><span class="http-method">GET</span><code>/File/GetAll</code><p>ZIP-архив файлов, которые уже сохранены на серверах Tenderland.</p></div>
+                  <div><span class="http-method">GET</span><code>/File/Get</code><p>Один исходный файл по <code>storageId</code>.</p></div>
+                </div>
+              </details>
+
+              <details class="api-endpoint-group">
+                <summary>Организации, события и статистика</summary>
+                <div class="api-endpoint-list">
+                  <div><span class="http-method">GET</span><code>/Organizations/GetEgrul</code><p>Выписка ЕГРЮЛ/ЕГРИП в XML по ОГРН или идентификатору организации.</p></div>
+                  <div><span class="http-method">GET</span><code>/Organizations/GetEgrulStatementDates</code><p>Даты, на которые доступно формирование выписки.</p></div>
+                  <div><span class="http-method">GET</span><code>/Entity/GetEvents</code><p>События и даты обновлений тендеров, контрактов и планов.</p></div>
+                  <div><span class="http-method">GET</span><code>/User/GetStatistic</code><p>Лимиты и текущее потребление; сам вызов не тарифицируется.</p></div>
+                </div>
+              </details>
+            </section>
+
+            <section class="api-docs-section" id="files">
+              <h2>Файлы и связанные данные</h2>
+              <p>Тип сущности задаётся параметром <code>entityTypeId</code>: <code>1</code> — тендер, <code>2</code> — контракт, <code>3</code> — позиция плана. Идентификатор сущности имеет формат <code>TL\d+</code>.</p>
+              <p>Сначала вызывайте <code>File/GetEntityFileList</code>. Файл со <code>storageId &gt; 0</code> можно скачать через <code>File/Get</code>. Если <code>storageId</code> отсутствует, используйте <code>sourceLink</code>. ZIP из <code>File/GetAll</code> может быть неполным, потому что Tenderland хранит на своих серверах не все документы.</p>
+              <p>Отчёты могут объединять тендеры, лоты, контракты и позиции планов. В многолотовых и совместных закупках строки повторяются для сохранения связей, поэтому ключ дедупликации должен учитывать тип сущности и лот.</p>
+            </section>
+
+            <section class="api-docs-section" id="limits">
+              <h2>Лимиты</h2>
+              <div class="api-docs-table-wrap">
+                <table>
+                  <thead><tr><th>Модуль</th><th>Ограничение</th><th>Значение без оплаты</th></tr></thead>
+                  <tbody>
+                    <tr><td>API / API Ревизор</td><td>Запросов в сутки</td><td>до 300</td></tr>
+                    <tr><td>API / API Ревизор</td><td>Единиц данных в сутки</td><td>до 300</td></tr>
+                    <tr><td>API / API Ревизор</td><td>Единиц данных в месяц</td><td>до 9 000</td></tr>
+                    <tr><td>API / API Ревизор</td><td>За один ответ</td><td>до 100</td></tr>
+                    <tr><td>API Поиск</td><td>Сущностей на странице</td><td>до 100</td></tr>
+                    <tr><td>API Поиск</td><td>Глубина страниц</td><td>до 100</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Суточные счётчики сбрасываются в 00:00 МСК, месячные — первого числа в 00:00 МСК. Единица данных — тендерный лот, контракт, позиция плана или один файл.</p>
+            </section>
+
+            <section class="api-docs-section" id="errors">
+              <h2>Ошибки и повторные запросы</h2>
+              <div class="api-docs-table-wrap">
+                <table>
+                  <thead><tr><th>Код</th><th>HTTP</th><th>Действие</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>USER_INVALID_API_KEY</code></td><td>403</td><td>Проверить ключ и при необходимости выпустить новый.</td></tr>
+                    <tr><td><code>USER_DISABLE_API_MODULE</code></td><td>403</td><td>Подключить нужный модуль у менеджера Tenderland.</td></tr>
+                    <tr><td><code>USER_INVALID_ROLE</code></td><td>403</td><td>Использовать учётную запись администратора кабинета.</td></tr>
+                    <tr><td><code>USER_EXPIRATION_LIMIT</code></td><td>403</td><td>Проверить срок доступа и оплату.</td></tr>
+                    <tr><td><code>API_REQUEST_LIMIT</code></td><td>403</td><td>Проверить статистику и дождаться сброса лимита.</td></tr>
+                    <tr><td><code>API_INVALID_PARAMETER</code></td><td>400</td><td>Проверить значения по справочникам и пересоздать истёкшую задачу.</td></tr>
+                    <tr><td><code>API_TOO_MANY_REQUESTS</code></td><td>429</td><td>Убрать параллельное чтение задачи и повторить с задержкой.</td></tr>
+                    <tr><td><code>SYSTEM_ERROR</code></td><td>500</td><td>Повторить с экспоненциальной задержкой; при длительной ошибке обратиться в поддержку.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Для 429 и 500 используйте ограниченное число повторов с увеличивающейся задержкой. Ошибки 400 и 403 автоматически не повторяйте: сначала исправьте запрос, доступ или лимит.</p>
+            </section>
+
+            <section class="api-docs-section" id="notes">
+              <h2>Замечания к редакции v1</h2>
+              <ul class="api-docs-list">
+                <li>В таблице <code>Export/Get</code> для <code>offset</code> указано значение больше нуля, но официальный пример начинает с <code>offset=0</code>. Первую страницу запрашиваем с нуля.</li>
+                <li>В строке запроса <code>Export/Create</code> встречается опечатка <code>oderBy</code>; описание параметра и остальные примеры используют <code>orderBy</code>.</li>
+                <li>Для результата <code>Search/Find</code> документация использует оба имени: <code>sessionId</code> в таблице и <code>id</code> в примере. До проверки реальным ответом обработчик должен принимать оба варианта.</li>
+                <li>Методы поиска сейчас работают только с JSON, а <code>Organizations/GetEgrul</code> всегда возвращает XML.</li>
+              </ul>
+            </section>
+          </article>
+        </section>
+
+        <aside class="home-panel home-panel-right api-docs-toc-panel" aria-label="Оглавление">
+          <nav class="api-docs-toc">
+            <strong>На этой странице</strong>
+            <a href="#start">Начало работы</a>
+            <a href="#modules">Модули</a>
+            <a href="#export">Выгрузка</a>
+            <a href="#search">Поиск</a>
+            <a href="#webhooks">Webhook</a>
+            <a href="#methods">Каталог методов</a>
+            <a href="#files">Файлы</a>
+            <a href="#limits">Лимиты</a>
+            <a href="#errors">Ошибки</a>
+            <a href="#notes">Замечания v1</a>
+          </nav>
+        </aside>
+      </main>
+
+      <!-- SITE_FOOTER -->
+      <!-- MOBILE_NAV -->
+    </div>
+
+    <script src="/vendor/lottie.min.js"></script>
+    <script src="/js/lottie-loader.js"></script>
+    <script src="/js/mobile-nav.js"></script>
+    <script src="/js/home-page.js"></script>
+  </body>
+</html>

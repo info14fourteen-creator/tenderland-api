@@ -164,6 +164,8 @@ body {
 }
 
 .home-sidebar-nav {
+  display: grid;
+  gap: 4px;
   padding: 24px 16px;
 }
 
@@ -182,6 +184,10 @@ body {
   overflow: hidden;
 }
 
+.home-sidebar-item.is-active {
+  color: var(--color-brand-mist);
+}
+
 .home-sidebar-icon {
   display: block;
   flex: 0 0 16px;
@@ -198,11 +204,12 @@ body {
 }
 
 .home-panel-toggle {
-  position: absolute;
-  top: 50%;
-  right: 0;
+  position: sticky;
+  top: 50vh;
+  right: auto;
   z-index: 3;
   display: grid;
+  float: right;
   place-items: center;
   width: 46px;
   height: 46px;
