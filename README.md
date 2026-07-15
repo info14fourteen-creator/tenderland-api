@@ -31,6 +31,16 @@ npm run migrate
 npm run dev
 ```
 
+## Tenderland procedure import
+
+Import no more than 30 procedures from the configured autosearch and report:
+
+```bash
+npm run import:procedures -- --limit 30
+```
+
+The report must include `tender_id`. The default report and autosearch are both named `Kortex CRM`. Multiple export rows with the same Tenderland ID are grouped into one `procedures` record and retained in `source_payload.rows`.
+
 Shared site chrome is rendered on the server for every public page:
 
 - `src/views/partials/site-header.html` — the single header source

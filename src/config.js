@@ -4,6 +4,11 @@ dotenv.config();
 
 export const config = {
   port: Number(process.env.PORT || 3000),
+  tenderlandApiBaseUrl: process.env.TENDERLAND_API_BASE_URL || "https://tenderland.ru/Api/v1",
+  tenderlandApiKey: process.env.TENDERLAND_API_KEY || "",
+  tenderlandApiKeyHeader: process.env.TENDERLAND_API_KEY_HEADER || "Tenderland-Api-Key",
+  tenderlandReportName: process.env.TENDERLAND_REPORT_NAME || "Kortex CRM",
+  tenderlandAutosearchName: process.env.TENDERLAND_AUTOSEARCH_NAME || "Kortex CRM",
   databaseUrl: process.env.DATABASE_URL || "",
   jwtSecret: process.env.JWT_SECRET || "",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
