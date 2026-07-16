@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { requireAuth } from "../auth.js";
+import { config } from "../config.js";
 import { query } from "../db.js";
 
 const router = Router();
@@ -8,6 +9,8 @@ const router = Router();
 const listProceduresSchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(30)
 });
+
+const procedureIdSchema = z.string().regex(/^(?:\d+|TL\d+)$/i);
 
 function toNumber(value) {
   const number = Number(value);
@@ -29,6 +32,34 @@ function safePublicUrl(value) {
   } catch {
     return null;
   }
+}
+
+function sanitizeSourceValue(value, key = "") {
+  if (Array.isArray(value)) {
+    return value.map((item) => sanitizeSourceValue(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([childKey, childValue]) => [
+        childKey,
+        sanitizeSourceValue(childValue, childKey)
+      ])
+    );
+  }
+
+  if (/api.?key|secret|token/i.test(key)) {
+    return value ? "[скрыто]" : value;
+  }
+
+  if (typeof value !== "string") return value;
+
+  let sanitized = value.replace(/([?&]apiKey=)[^&\s"']*/gi, "$1[скрыто]");
+  if (config.tenderlandApiKey) {
+    sanitized = sanitized.split(config.tenderlandApiKey).join("[скрыто]");
+  }
+
+  return sanitized;
 }
 
 function procedureFromRow(row) {
@@ -72,6 +103,35 @@ router.get("/", requireAuth, async (req, res, next) => {
     return res.json({
       procedures: rows.map(procedureFromRow),
       total: rows.length
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.get("/:id", requireAuth, async (req, res, next) => {
+  try {
+    const id = procedureIdSchema.parse(req.params.id);
+    const { rows } = await query(
+      `select id, source, external_id, stage, source_payload, created_at, updated_at
+       from procedures
+       where id::text = $1 or upper(external_id) = upper($1)
+       limit 1`,
+      [id]
+    );
+
+    if (!rows[0]) {
+      return res.status(404).json({ error: "PROCEDURE_NOT_FOUND" });
+    }
+
+    const row = rows[0];
+    return res.json({
+      procedure: {
+        ...procedureFromRow(row),
+        source: row.source,
+        createdAt: row.created_at,
+        sourceData: sanitizeSourceValue(row.source_payload)
+      }
     });
   } catch (error) {
     return next(error);

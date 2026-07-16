@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Карточка процедуры Kortex CRM">
+    <title>Процедура — Kortex Capital</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/styles/site-chrome.css">
+    <link rel="stylesheet" href="/styles/mobile-nav.css">
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/procedure-detail.css">
+  </head>
+  <body class="home-body procedure-detail-body has-mobile-nav">
+    <div class="site-shell home-shell">
+      <!-- SITE_HEADER -->
+
+      <main class="home-page procedure-detail-page" aria-label="Карточка процедуры">
+        <!-- WORKSPACE_SIDEBAR -->
+
+        <section class="home-workspace procedure-detail-workspace">
+          <div class="procedure-detail-state" data-procedure-detail-state>
+            <span class="procedure-detail-loader" aria-hidden="true"></span>
+            <p>Загружаем процедуру</p>
+          </div>
+
+          <article class="procedure-detail" data-procedure-detail hidden>
+            <a class="procedure-back-link" href="/procedures">
+              <i data-lucide="arrow-left" aria-hidden="true"></i>
+              <span>Процедуры</span>
+            </a>
+
+            <header class="procedure-detail-header">
+              <div class="procedure-detail-title-row">
+                <div>
+                  <div class="procedure-detail-reference">
+                    <span data-procedure-number></span>
+                    <span data-procedure-external-id></span>
+                  </div>
+                  <h1 data-procedure-title></h1>
+                </div>
+                <div class="procedure-detail-statuses">
+                  <span class="procedure-detail-stage" data-procedure-stage></span>
+                  <span class="procedure-detail-status" data-procedure-status></span>
+                </div>
+              </div>
+
+              <dl class="procedure-key-facts" data-procedure-key-facts></dl>
+            </header>
+
+            <nav class="procedure-tabs" aria-label="Разделы карточки" data-procedure-tabs>
+              <button type="button" data-procedure-tab="overview" aria-selected="true">Обзор</button>
+              <button type="button" data-procedure-tab="products" aria-selected="false">Состав закупки</button>
+              <button type="button" data-procedure-tab="customer" aria-selected="false">Заказчик</button>
+              <button type="button" data-procedure-tab="documents" aria-selected="false">Документы</button>
+              <button type="button" data-procedure-tab="history" aria-selected="false">История</button>
+              <button type="button" data-procedure-tab="source" aria-selected="false">Все данные</button>
+              <button class="procedure-tab-work" type="button" data-procedure-tab="work" aria-selected="false">Работа</button>
+            </nav>
+
+            <div class="procedure-tab-content" data-procedure-tab-content></div>
+          </article>
+        </section>
+
+        <aside class="home-panel home-panel-right procedure-work-panel" aria-label="Работа с процедурой">
+          <div class="procedure-work-summary" data-procedure-work-summary hidden>
+            <h2>Работа</h2>
+            <dl data-procedure-work-fields></dl>
+            <div class="procedure-sync-block">
+              <span>Tenderland</span>
+              <strong data-procedure-sync-date>Не синхронизировано</strong>
+              <a data-procedure-source-link target="_blank" rel="noopener noreferrer">
+                Открыть источник
+                <i data-lucide="external-link" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <!-- SITE_FOOTER -->
+
+      <!-- MOBILE_NAV -->
+    </div>
+
+    <script src="/vendor/lottie.min.js"></script>
+    <script src="/vendor/lucide/lucide.min.js"></script>
+    <script src="/js/lottie-loader.js"></script>
+    <script src="/js/mobile-nav.js"></script>
+    <script src="/js/home-page.js"></script>
+    <script src="/js/procedure-detail.js"></script>
+  </body>
+</html>

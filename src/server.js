@@ -65,6 +65,7 @@ app.use("/api/procedures", procedureRoutes);
 app.get("/", publicPage("index.html"));
 app.get(["/home", "/home/"], publicPage("home.html"));
 app.get(["/procedures", "/procedures/"], publicPage("procedures.html"));
+app.get(/^\/procedures\/(?:\d+|TL\d+)\/?$/i, publicPage("procedure-detail.html"));
 app.get(["/account", "/account/"], publicPage("account.html"));
 app.get(["/api-docs", "/api-docs/"], publicPage("api-docs.html"));
 app.get(["/terms", "/terms/"], publicPage("terms.html"));

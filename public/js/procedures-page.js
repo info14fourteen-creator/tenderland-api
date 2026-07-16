@@ -73,10 +73,28 @@
     return link;
   }
 
+  function detailHref(procedure) {
+    return `/procedures/${encodeURIComponent(procedure.id)}`;
+  }
+
+  function procedureNameLink(procedure, headingTag) {
+    const heading = element(headingTag, "procedure-name");
+    const link = element("a", "procedure-name-link", procedure.name);
+    link.href = detailHref(procedure);
+    heading.append(link);
+    return heading;
+  }
+
+  function makeNavigable(node, procedure) {
+    node.classList.add("procedure-entry");
+    node.dataset.procedureHref = detailHref(procedure);
+    return node;
+  }
+
   function procedureTitle(procedure) {
     const wrapper = element("div");
     wrapper.append(
-      element("p", "procedure-name", procedure.name),
+      procedureNameLink(procedure, "p"),
       element("span", "procedure-reference", procedure.registrationNumber || procedure.externalId)
     );
     return wrapper;
@@ -95,7 +113,7 @@
 
     const body = document.createElement("tbody");
     items.forEach((procedure) => {
-      const row = document.createElement("tr");
+      const row = makeNavigable(document.createElement("tr"), procedure);
       const titleCell = document.createElement("td");
       titleCell.append(procedureTitle(procedure));
       const link = sourceLink(procedure);
@@ -131,7 +149,7 @@
     const grid = element("div", "procedure-cards");
 
     items.forEach((procedure) => {
-      const card = element("article", "procedure-card");
+      const card = makeNavigable(element("article", "procedure-card"), procedure);
       const top = element("div", "procedure-card-topline");
       top.append(
         element("span", "procedure-reference", procedure.registrationNumber || procedure.externalId),
@@ -139,7 +157,7 @@
       );
 
       const main = document.createElement("div");
-      main.append(element("h2", "procedure-name", procedure.name));
+      main.append(procedureNameLink(procedure, "h2"));
       const details = element("dl", "procedure-card-details");
       details.append(
         detail("Заказчик", valueOrFallback(procedure.customer)),
@@ -162,10 +180,10 @@
   }
 
   function kanbanCard(procedure) {
-    const card = element("article", "kanban-card");
+    const card = makeNavigable(element("article", "kanban-card"), procedure);
     card.append(
       element("span", "procedure-reference", procedure.registrationNumber || procedure.externalId),
-      element("h3", "procedure-name", procedure.name),
+      procedureNameLink(procedure, "h3"),
       statusNode(procedure.status)
     );
     const footer = element("footer", "kanban-card-footer");
@@ -302,6 +320,12 @@
   searchInput?.addEventListener("input", () => {
     query = searchInput.value.trim().toLocaleLowerCase("ru-RU");
     render();
+  });
+
+  content?.addEventListener("click", (event) => {
+    if (event.target.closest("a, button")) return;
+    const entry = event.target.closest("[data-procedure-href]");
+    if (entry) window.location.href = entry.dataset.procedureHref;
   });
 
   refreshIcons();

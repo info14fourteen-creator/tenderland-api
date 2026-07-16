@@ -205,6 +205,30 @@
   -webkit-line-clamp: 3;
 }
 
+.procedure-name-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.procedure-entry {
+  cursor: pointer;
+}
+
+.procedure-table tbody tr:hover {
+  background: rgb(170 171 184 / 18%);
+}
+
+.procedure-card:hover,
+.kanban-card:hover {
+  border-color: var(--color-brand-blue);
+}
+
+.procedure-name-link:focus-visible {
+  border-radius: 2px;
+  outline: 3px solid var(--color-brand-cyan);
+  outline-offset: 2px;
+}
+
 .procedure-reference,
 .procedure-meta,
 .procedure-deadline-label {
