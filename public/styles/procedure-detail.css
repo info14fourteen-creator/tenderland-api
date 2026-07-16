@@ -160,6 +160,7 @@
 .procedure-key-facts dt,
 .procedure-data-grid dt,
 .procedure-work-summary dt,
+.procedure-work-mobile dt,
 .procedure-customer-grid dt,
 .procedure-document-fact dt {
   color: var(--color-brand-slate);
@@ -172,6 +173,7 @@
 .procedure-key-facts dd,
 .procedure-data-grid dd,
 .procedure-work-summary dd,
+.procedure-work-mobile dd,
 .procedure-customer-grid dd,
 .procedure-document-fact dd {
   margin: 4px 0 0;
