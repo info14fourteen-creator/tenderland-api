@@ -3,6 +3,12 @@
   padding: 20px 24px 32px;
 }
 
+.procedure-detail-state[hidden],
+.procedure-detail[hidden],
+.procedure-work-summary[hidden] {
+  display: none;
+}
+
 .procedure-detail-state {
   display: grid;
   place-items: center;
