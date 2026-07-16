@@ -94,9 +94,138 @@ function groupProcedureRows(rows, metadata) {
       payload: {
         import: metadata,
         rows: procedureRows
-      }
+      },
+      positions: productPositionsFromRows(procedureRows)
     }))
   };
+}
+
+function numberOrNull(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(String(value).replace(",", "."));
+  return Number.isFinite(number) ? number : null;
+}
+
+function productPositionsFromRows(rows) {
+  const positions = new Map();
+
+  rows.forEach((row, rowIndex) => {
+    const tender = row?.tender || {};
+    const products = Array.isArray(tender.products) ? tender.products : [];
+
+    products.forEach((product, productIndex) => {
+      const externalId = String(
+        product.id
+        ?? product.lotProductId
+        ?? `row-${rowIndex + 1}-product-${productIndex + 1}`
+      );
+
+      positions.set(externalId, {
+        external_id: externalId,
+        name: product.lotProductName || null,
+        ktru_code: product.lotKtruCode || null,
+        okpd2_code: product.lotOkpd2Code || null,
+        okei_code: product.lotProductsOkeiCode || null,
+        okei_name: product.lotProductsOkeiName || null,
+        quantity: numberOrNull(product.lotProductCount),
+        unit_price: numberOrNull(product.lotProductPrice),
+        total_price: numberOrNull(product.lotProductsSum),
+        currency: tender.lotCurrency || null,
+        source_payload: product,
+        sort_order: productIndex + 1
+      });
+    });
+  });
+
+  return [...positions.values()];
+}
+
+async function syncProductPositions(client, procedures) {
+  const externalIds = procedures.map((procedure) => procedure.external_id);
+  const dealsResult = await client.query(
+    `select id, external_id
+     from deals
+     where deal_type = 'procedure'
+       and source = 'tenderland'
+       and external_id = any($1::text[])`,
+    [externalIds]
+  );
+  const dealIds = new Map(dealsResult.rows.map((row) => [row.external_id, row.id]));
+
+  await client.query(
+    `delete from product_positions
+     where source = 'tenderland'
+       and deal_id = any($1::bigint[])`,
+    [dealsResult.rows.map((row) => row.id)]
+  );
+
+  const positions = procedures.flatMap((procedure) => {
+    const dealId = dealIds.get(procedure.external_id);
+    if (!dealId) return [];
+
+    return procedure.positions.map((position) => ({
+      ...position,
+      deal_id: dealId
+    }));
+  });
+
+  if (!positions.length) return 0;
+
+  await client.query(
+    `with incoming as (
+       select *
+       from jsonb_to_recordset($1::jsonb) as item(
+         deal_id bigint,
+         external_id text,
+         name text,
+         ktru_code text,
+         okpd2_code text,
+         okei_code text,
+         okei_name text,
+         quantity numeric,
+         unit_price numeric,
+         total_price numeric,
+         currency text,
+         source_payload jsonb,
+         sort_order integer
+       )
+     )
+     insert into product_positions (
+       deal_id,
+       source,
+       external_id,
+       name,
+       ktru_code,
+       okpd2_code,
+       okei_code,
+       okei_name,
+       quantity,
+       unit_price,
+       total_price,
+       currency,
+       source_payload,
+       sort_order
+     )
+     select
+       deal_id,
+       'tenderland',
+       external_id,
+       name,
+       ktru_code,
+       okpd2_code,
+       okei_code,
+       okei_name,
+       quantity,
+       unit_price,
+       total_price,
+       currency,
+       source_payload,
+       sort_order
+     from incoming`,
+    [JSON.stringify(positions)]
+  );
+
+  return positions.length;
 }
 
 async function upsertProcedures(procedures) {
@@ -111,8 +240,9 @@ async function upsertProcedures(procedures) {
     const externalIds = procedures.map((procedure) => procedure.external_id);
     const existingResult = await client.query(
       `select external_id
-       from procedures
-       where source = 'tenderland'
+       from deals
+       where deal_type = 'procedure'
+         and source = 'tenderland'
          and external_id = any($1::text[])`,
       [externalIds]
     );
@@ -124,19 +254,25 @@ async function upsertProcedures(procedures) {
          from jsonb_to_recordset($1::jsonb)
            as item(external_id text, payload jsonb)
        )
-       insert into procedures (source, external_id, source_payload)
-       select 'tenderland', external_id, payload
+       insert into deals (deal_type, stage_id, source, external_id, source_payload)
+       select 'procedure', stage.id, 'tenderland', incoming.external_id, incoming.payload
        from incoming
-       on conflict (source, external_id)
+       join deal_stages stage
+         on stage.deal_type = 'procedure'
+        and stage.code = 'exported'
+       on conflict (source, external_id, deal_type)
        do update set source_payload = excluded.source_payload`,
       [JSON.stringify(procedures)]
     );
+
+    const syncedProductPositions = await syncProductPositions(client, procedures);
 
     await client.query("commit");
 
     return {
       inserted: procedures.filter((procedure) => !existing.has(procedure.external_id)).length,
-      updated: procedures.filter((procedure) => existing.has(procedure.external_id)).length
+      updated: procedures.filter((procedure) => existing.has(procedure.external_id)).length,
+      syncedProductPositions
     };
   } catch (error) {
     await client.query("rollback");
@@ -201,6 +337,7 @@ console.log(JSON.stringify({
   uniqueProcedures: grouped.procedures.length,
   inserted: result.inserted,
   updated: result.updated,
+  syncedProductPositions: result.syncedProductPositions,
   skippedRowsWithoutTenderId: grouped.rowsWithoutTenderId,
   report: report.Name,
   autosearch: autosearch.Name

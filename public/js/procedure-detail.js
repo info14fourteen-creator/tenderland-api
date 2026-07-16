@@ -167,6 +167,20 @@
   }
 
   function products() {
+    if (procedure.productPositions?.length) {
+      return procedure.productPositions.map((position, index) => ({
+        lotProductName: position.name,
+        lotKtruCode: position.ktruCode,
+        lotProductCount: position.quantity,
+        lotProductsOkeiName: position.okeiName,
+        lotProductPrice: position.unitPrice,
+        lotProductsSum: position.totalPrice,
+        currency: position.currency,
+        lotNumber: 1,
+        rowNumber: index + 1
+      }));
+    }
+
     return tenders().flatMap((tender, tenderIndex) =>
       (tender.products || []).map((product, productIndex) => ({
         ...product,

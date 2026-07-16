@@ -13,6 +13,7 @@
   const savedView = window.localStorage.getItem("kortex_procedures_view");
   let currentView = allowedViews.has(savedView) ? savedView : "list";
   let procedures = [];
+  let stages = [];
   let query = "";
 
   const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
@@ -197,7 +198,7 @@
 
   function kanbanView(items) {
     const board = element("div", "procedure-kanban");
-    const groups = new Map();
+    const groups = new Map(stages.map((stage) => [stage.name, []]));
 
     items.forEach((procedure) => {
       const stage = procedure.stage || "Без стадии";
@@ -227,7 +228,8 @@
       procedure.customer,
       procedure.region,
       procedure.status,
-      procedure.platform
+      procedure.platform,
+      procedure.stage
     ].some((value) => value?.toLocaleLowerCase("ru-RU").includes(query)));
   }
 
@@ -282,16 +284,28 @@
     refreshButton?.setAttribute("disabled", "");
 
     try {
-      const response = await fetch("/api/procedures?limit=30", {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store"
-      });
+      const [proceduresResponse, stagesResponse] = await Promise.all([
+        fetch("/api/procedures?limit=30", {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store"
+        }),
+        fetch("/api/procedures/stages", {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store"
+        })
+      ]);
 
-      if (response.status === 401) return;
-      if (!response.ok) throw new Error("PROCEDURES_LOAD_FAILED");
+      if (proceduresResponse.status === 401 || stagesResponse.status === 401) return;
+      if (!proceduresResponse.ok || !stagesResponse.ok) {
+        throw new Error("PROCEDURES_LOAD_FAILED");
+      }
 
-      const data = await response.json();
-      procedures = data.procedures || [];
+      const [proceduresData, stagesData] = await Promise.all([
+        proceduresResponse.json(),
+        stagesResponse.json()
+      ]);
+      procedures = proceduresData.procedures || [];
+      stages = stagesData.stages || [];
       render();
     } catch {
       content.replaceChildren();

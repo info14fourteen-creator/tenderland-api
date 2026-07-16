@@ -39,7 +39,7 @@ Import no more than 30 procedures from the configured autosearch and report:
 npm run import:procedures -- --limit 30
 ```
 
-The report must include `tender_id`. The default report and autosearch are both named `Kortex CRM`. Multiple export rows with the same Tenderland ID are grouped into one `procedures` record and retained in `source_payload.rows`.
+The report must include `tender_id`. The default report and autosearch are both named `Kortex CRM`. Multiple export rows with the same Tenderland ID are grouped into one `deals` record with `deal_type = 'procedure'` and retained in `source_payload.rows`. Tenderland products are synchronized into `product_positions`.
 
 Shared site chrome is rendered on the server for every public page:
 
