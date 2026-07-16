@@ -14,7 +14,8 @@ const migrations = [
   "007_create_procedures_and_contracts.sql",
   "008_create_companies_and_contacts.sql",
   "009_add_procedure_stage.sql",
-  "010_unify_deals_and_product_positions.sql"
+  "010_unify_deals_and_product_positions.sql",
+  "011_create_document_storage.sql"
 ];
 
 for (const migration of migrations) {

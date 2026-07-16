@@ -18,6 +18,10 @@ SMTP_SECURE=false
 SMTP_USER=no-reply@kortex.capital
 SMTP_PASS=
 MAIL_FROM=no-reply@kortex.capital
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET_NAME=kortex-crm-files
 ```
 
 `DATABASE_URL` must point to a Postgres database.
@@ -40,6 +44,22 @@ npm run import:procedures -- --limit 30
 ```
 
 The report must include `tender_id`. The default report and autosearch are both named `Kortex CRM`. Multiple export rows with the same Tenderland ID are grouped into one `deals` record with `deal_type = 'procedure'` and retained in `source_payload.rows`. Tenderland products are synchronized into `product_positions`.
+
+## Procedure documents
+
+Document metadata is stored in Postgres, while file bytes are stored in a private
+Cloudflare R2 bucket. Browser uploads use short-lived signed URLs and do not pass
+through the Heroku web process.
+
+Synchronize metadata for up to 30 procedures and download up to 200 queued files:
+
+```bash
+npm run sync:files -- --procedures 30 --files 200
+```
+
+Tenderland files with a positive `StorageId` are downloaded individually. Source
+links are stored without API keys, and links outside the documented file endpoint
+are never fetched by the worker.
 
 Shared site chrome is rendered on the server for every public page:
 

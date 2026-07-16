@@ -162,7 +162,7 @@
 .procedure-work-summary dt,
 .procedure-work-mobile dt,
 .procedure-customer-grid dt,
-.procedure-document-fact dt {
+.procedure-document-summary dt {
   color: var(--color-brand-slate);
   font-size: 8px;
   font-weight: 900;
@@ -175,7 +175,7 @@
 .procedure-work-summary dd,
 .procedure-work-mobile dd,
 .procedure-customer-grid dd,
-.procedure-document-fact dd {
+.procedure-document-summary dd {
   margin: 4px 0 0;
   color: var(--color-brand-navy);
   font-size: 11px;
@@ -324,26 +324,22 @@
 .procedure-products-table th:nth-child(4) { width: 13%; }
 .procedure-products-table th:nth-child(5) { width: 13%; }
 
-.procedure-customer-list,
-.procedure-document-list {
+.procedure-customer-list {
   display: grid;
   gap: 18px;
 }
 
-.procedure-customer,
-.procedure-document-row {
+.procedure-customer {
   padding-bottom: 18px;
   border-bottom: 1px solid var(--color-brand-mist);
 }
 
-.procedure-customer:last-child,
-.procedure-document-row:last-child {
+.procedure-customer:last-child {
   padding-bottom: 0;
   border-bottom: 0;
 }
 
 .procedure-customer h3,
-.procedure-document-row h3,
 .procedure-event h3 {
   margin: 0 0 12px;
   color: var(--color-brand-navy);
@@ -353,15 +349,250 @@
   letter-spacing: 0;
 }
 
-.procedure-document-row {
+.procedure-document-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
+  gap: 16px;
+  margin-bottom: 14px;
 }
 
-.procedure-document-fact {
+.procedure-document-search {
+  display: flex;
+  flex: 1 1 320px;
+  align-items: center;
+  gap: 8px;
+  min-width: 180px;
+  max-width: 520px;
+  height: 34px;
+  border-bottom: 1px solid var(--color-brand-mist);
+  color: var(--color-brand-slate);
+}
+
+.procedure-document-search svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2;
+}
+
+.procedure-document-search input {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: var(--color-brand-navy);
+  background: transparent;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.procedure-document-search:focus-within {
+  border-bottom-color: var(--color-brand-cyan);
+}
+
+.procedure-document-commands,
+.procedure-document-actions,
+.procedure-document-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.procedure-document-command,
+.procedure-document-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 32px;
+  border: 1px solid var(--color-brand-mist);
+  border-radius: 4px;
+  padding: 6px 10px;
+  color: var(--color-brand-navy);
+  background: var(--color-white);
+  cursor: pointer;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.procedure-document-command.is-primary {
+  border-color: var(--color-brand-cyan);
+  color: var(--color-white);
+  background: var(--color-brand-cyan);
+}
+
+.procedure-document-command svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+}
+
+.procedure-document-command:disabled,
+.procedure-document-more:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.procedure-document-command:focus-visible,
+.procedure-document-more:focus-visible,
+.procedure-document-action:focus-visible,
+.procedure-document-search input:focus-visible {
+  outline: 3px solid var(--color-brand-cyan);
+  outline-offset: 2px;
+}
+
+.procedure-document-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 0 8px;
+  border-top: 1px solid var(--color-brand-mist);
+  border-bottom: 1px solid var(--color-brand-mist);
+}
+
+.procedure-document-summary > div {
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.procedure-document-summary > div + div {
+  border-left: 1px solid var(--color-brand-mist);
+}
+
+.procedure-document-message,
+.procedure-document-loading {
+  margin: 10px 0;
+  color: var(--color-brand-blue);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.procedure-document-list {
+  display: grid;
+}
+
+.procedure-document-row {
+  display: grid;
+  grid-template-columns: 30px minmax(220px, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--color-brand-mist);
+}
+
+.procedure-document-row:last-child {
+  border-bottom: 0;
+}
+
+.procedure-document-icon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: var(--color-brand-blue);
+}
+
+.procedure-document-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.8;
+}
+
+.procedure-document-body {
+  min-width: 0;
+}
+
+.procedure-document-body h3 {
   margin: 0;
+  overflow: hidden;
+  color: var(--color-brand-navy);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.procedure-document-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 4px;
+  color: var(--color-brand-slate);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.procedure-document-meta span + span::before {
+  margin-right: 12px;
+  color: var(--color-brand-mist);
+  content: "/";
+}
+
+.procedure-document-status,
+.procedure-document-current {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  border-left: 3px solid var(--color-brand-mist);
+  padding: 3px 7px;
+  color: var(--color-brand-navy);
+  background: var(--color-white);
+  font-size: 8px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.procedure-document-status.is-stored {
+  border-left-color: var(--color-brand-cyan);
+}
+
+.procedure-document-status.is-queued,
+.procedure-document-status.is-downloading,
+.procedure-document-status.is-pending_upload {
+  border-left-color: var(--color-brand-blue);
+}
+
+.procedure-document-status.is-failed,
+.procedure-document-status.is-quarantined {
+  border-left-color: var(--color-brand-navy);
+}
+
+.procedure-document-current {
+  border-left: 0;
+  color: var(--color-brand-blue);
+  background: var(--color-brand-mist);
+}
+
+.procedure-document-action {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  color: var(--color-brand-slate);
+  background: transparent;
+  cursor: pointer;
+}
+
+.procedure-document-action:hover {
+  color: var(--color-brand-navy);
+}
+
+.procedure-document-action svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2;
+}
+
+.procedure-document-more {
+  width: 100%;
+  margin-top: 12px;
 }
 
 .procedure-events {
@@ -543,8 +774,55 @@
   }
 
   .procedure-document-row {
-    align-items: flex-start;
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    align-items: start;
+  }
+
+  .procedure-document-toolbar {
+    align-items: stretch;
     flex-direction: column;
+  }
+
+  .procedure-document-search {
+    flex-basis: auto;
+    max-width: none;
+  }
+
+  .procedure-document-commands {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .procedure-document-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .procedure-document-summary > div:nth-child(3) {
+    border-top: 1px solid var(--color-brand-mist);
+    border-left: 0;
+  }
+
+  .procedure-document-summary > div:nth-child(4) {
+    border-top: 1px solid var(--color-brand-mist);
+  }
+
+  .procedure-document-state {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    flex-wrap: wrap;
+  }
+
+  .procedure-document-actions {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .procedure-document-body h3 {
+    white-space: normal;
+  }
+
+  .procedure-document-meta span + span::before {
+    display: none;
   }
 
   .procedure-source-data {

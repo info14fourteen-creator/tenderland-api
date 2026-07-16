@@ -1,5 +1,6 @@
 import { getPool } from "../src/db.js";
 import { config, requireConfig } from "../src/config.js";
+import { sanitizeSourceValue } from "../src/sourceSanitizer.js";
 
 const MAX_PROCEDURES = 30;
 
@@ -89,14 +90,17 @@ function groupProcedureRows(rows, metadata) {
 
   return {
     rowsWithoutTenderId,
-    procedures: [...grouped].map(([externalId, procedureRows]) => ({
-      external_id: externalId,
-      payload: {
-        import: metadata,
-        rows: procedureRows
-      },
-      positions: productPositionsFromRows(procedureRows)
-    }))
+    procedures: [...grouped].map(([externalId, procedureRows]) => {
+      const safeRows = procedureRows.map((row) => sanitizeSourceValue(row));
+      return {
+        external_id: externalId,
+        payload: {
+          import: metadata,
+          rows: safeRows
+        },
+        positions: productPositionsFromRows(safeRows)
+      };
+    })
   };
 }
 

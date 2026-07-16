@@ -10,6 +10,16 @@
   const procedureId = window.location.pathname.split("/").filter(Boolean).at(-1);
   let procedure = null;
   let activeTab = "overview";
+  let documents = [];
+  let documentSummary = null;
+  let documentCapabilities = null;
+  let documentTotal = 0;
+  let documentsLoaded = false;
+  let documentsLoading = false;
+  let documentMessage = "";
+  let documentSearch = "";
+  let documentSearchTimer = null;
+  const DOCUMENT_PAGE_SIZE = 50;
 
   const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
     day: "2-digit",
@@ -59,6 +69,20 @@
     const number = Number(value);
     if (!Number.isFinite(number) || number <= 0) return "Не указана";
     return `${numberFormatter.format(number)}${currency ? ` ${currency}` : ""}`;
+  }
+
+  function formatBytes(value) {
+    const bytes = Number(value);
+    if (!Number.isFinite(bytes) || bytes < 0) return "Размер не указан";
+    if (bytes < 1024) return `${bytes} Б`;
+    const units = ["КБ", "МБ", "ГБ", "ТБ"];
+    let size = bytes / 1024;
+    let unit = units[0];
+    for (let index = 1; index < units.length && size >= 1024; index += 1) {
+      size /= 1024;
+      unit = units[index];
+    }
+    return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 }).format(size)} ${unit}`;
   }
 
   function display(value, fallback = "Не указано") {
@@ -267,36 +291,316 @@
     return wrapper;
   }
 
+  function documentStatusLabel(status) {
+    return {
+      stored: "Сохранён",
+      pending_upload: "Загружается",
+      queued: "В очереди",
+      downloading: "Загружается",
+      external_only: "На источнике",
+      metadata_only: "Только сведения",
+      failed: "Ошибка",
+      quarantined: "На проверке"
+    }[status] || "Обрабатывается";
+  }
+
+  async function documentRequest(path, options = {}) {
+    const response = await fetch(path, {
+      ...options,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...options.headers
+      },
+      cache: "no-store"
+    });
+    if (response.status === 401) throw new Error("AUTH_REQUIRED");
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      const error = new Error(payload.message || payload.error || "FILE_REQUEST_FAILED");
+      error.code = payload.error;
+      throw error;
+    }
+    if (response.status === 204) return null;
+    return response.json();
+  }
+
+  function rerenderDocuments() {
+    if (activeTab === "documents") renderTab();
+  }
+
+  async function loadDocuments(reset = false) {
+    if (documentsLoading) return;
+    documentsLoading = true;
+    if (reset) {
+      documents = [];
+      documentsLoaded = false;
+    }
+    rerenderDocuments();
+
+    try {
+      const offset = reset ? 0 : documents.length;
+      const params = new URLSearchParams({
+        limit: String(DOCUMENT_PAGE_SIZE),
+        offset: String(offset)
+      });
+      if (documentSearch) params.set("q", documentSearch);
+      const data = await documentRequest(
+        `/api/procedures/${encodeURIComponent(procedureId)}/files?${params}`
+      );
+      documents = reset ? data.documents : [...documents, ...data.documents];
+      documentSummary = data.summary;
+      documentCapabilities = data.capabilities;
+      documentTotal = data.pagination.total;
+      documentsLoaded = true;
+      documentMessage = "";
+    } catch (error) {
+      documentMessage = error.message === "AUTH_REQUIRED"
+        ? "Сессия завершена"
+        : "Не удалось загрузить документы";
+    } finally {
+      documentsLoading = false;
+      rerenderDocuments();
+    }
+  }
+
+  async function uploadDocument(file) {
+    const created = await documentRequest(
+      `/api/procedures/${encodeURIComponent(procedureId)}/files/uploads`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          name: file.name,
+          size: file.size,
+          contentType: file.type || "application/octet-stream"
+        })
+      }
+    );
+    let uploadResponse;
+    try {
+      uploadResponse = await fetch(created.upload.url, {
+        method: "PUT",
+        headers: created.upload.headers,
+        body: file
+      });
+      if (!uploadResponse.ok) throw new Error("Не удалось передать файл в хранилище");
+    } catch (error) {
+      await documentRequest(
+        `/api/procedures/${encodeURIComponent(procedureId)}/files/${created.document.id}`,
+        { method: "DELETE" }
+      ).catch(() => {});
+      throw error;
+    }
+    await documentRequest(
+      `/api/procedures/${encodeURIComponent(procedureId)}/files/${created.document.id}/complete`,
+      { method: "POST" }
+    );
+  }
+
+  async function uploadDocuments(files) {
+    const selected = [...files];
+    const maximum = Number(documentCapabilities?.maxUploadBytes || 0);
+    const oversized = selected.find((file) => maximum && file.size > maximum);
+    if (oversized) {
+      documentMessage = `${oversized.name}: размер больше ${formatBytes(maximum)}`;
+      rerenderDocuments();
+      return;
+    }
+
+    try {
+      for (let index = 0; index < selected.length; index += 1) {
+        documentMessage = `Загрузка ${index + 1} из ${selected.length}: ${selected[index].name}`;
+        rerenderDocuments();
+        await uploadDocument(selected[index]);
+      }
+      await loadDocuments(true);
+      documentMessage = selected.length > 1 ? `Загружено файлов: ${selected.length}` : "Файл загружен";
+      rerenderDocuments();
+    } catch (error) {
+      documentMessage = error.code === "FILE_STORAGE_UNAVAILABLE"
+        ? "Файловое хранилище пока не подключено"
+        : error.message;
+      rerenderDocuments();
+    }
+  }
+
+  async function syncDocuments() {
+    documentMessage = "Получаем список документов Tenderland";
+    rerenderDocuments();
+    try {
+      const data = await documentRequest(
+        `/api/procedures/${encodeURIComponent(procedureId)}/files/sync`,
+        { method: "POST" }
+      );
+      await loadDocuments(true);
+      documentMessage = `Получено: ${data.sync.total}, в очереди: ${data.sync.queued}`;
+      rerenderDocuments();
+    } catch (error) {
+      documentMessage = error.code === "TENDERLAND_FILE_SYNC_FAILED"
+        ? "Tenderland пока не даёт доступ к модулю файлов"
+        : "Не удалось синхронизировать документы";
+      rerenderDocuments();
+    }
+  }
+
+  async function downloadDocument(documentItem) {
+    try {
+      const data = await documentRequest(
+        `/api/procedures/${encodeURIComponent(procedureId)}/files/${documentItem.id}/download`
+      );
+      const link = document.createElement("a");
+      link.href = data.url;
+      if (data.external) {
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      }
+      document.body.append(link);
+      link.click();
+      link.remove();
+    } catch {
+      documentMessage = "Файл ещё не готов к скачиванию";
+      rerenderDocuments();
+    }
+  }
+
+  async function deleteDocument(documentItem) {
+    if (!window.confirm(`Удалить «${documentItem.name}»?`)) return;
+    try {
+      await documentRequest(
+        `/api/procedures/${encodeURIComponent(procedureId)}/files/${documentItem.id}`,
+        { method: "DELETE" }
+      );
+      await loadDocuments(true);
+      documentMessage = "Документ удалён";
+      rerenderDocuments();
+    } catch {
+      documentMessage = "Не удалось удалить документ";
+      rerenderDocuments();
+    }
+  }
+
+  function documentAction(iconName, label, handler) {
+    const button = element("button", "procedure-document-action");
+    button.type = "button";
+    button.title = label;
+    button.setAttribute("aria-label", label);
+    button.append(icon(iconName));
+    button.addEventListener("click", handler);
+    return button;
+  }
+
+  function renderDocumentRow(documentItem) {
+    const row = element("article", "procedure-document-row");
+    const fileIcon = element("span", "procedure-document-icon");
+    fileIcon.append(icon("file-text"));
+    const body = element("div", "procedure-document-body");
+    body.append(element("h3", null, documentItem.name));
+    const meta = element("div", "procedure-document-meta");
+    meta.append(element("span", null, formatBytes(documentItem.sizeBytes)));
+    if (documentItem.groupName) meta.append(element("span", null, documentItem.groupName));
+    if (documentItem.version) meta.append(element("span", null, `Версия ${documentItem.version}`));
+    if (documentItem.publishedAt) meta.append(element("span", null, formatDate(documentItem.publishedAt)));
+    if (documentItem.source === "manual") meta.append(element("span", null, "Загружен вручную"));
+    body.append(meta);
+
+    const state = element("div", "procedure-document-state");
+    const badge = element(
+      "span",
+      `procedure-document-status is-${documentItem.status}`,
+      documentStatusLabel(documentItem.status)
+    );
+    state.append(badge);
+    if (documentItem.isCurrent && documentItem.source === "tenderland") {
+      state.append(element("span", "procedure-document-current", "Актуальная"));
+    }
+
+    const actions = element("div", "procedure-document-actions");
+    if (documentItem.hasStoredFile || documentItem.hasExternalSource) {
+      actions.append(documentAction("download", "Скачать", () => downloadDocument(documentItem)));
+    }
+    actions.append(documentAction("trash-2", "Удалить", () => deleteDocument(documentItem)));
+    row.append(fileIcon, body, state, actions);
+    return row;
+  }
+
   function renderDocuments() {
-    const tenderItems = tenders();
-    const total = tenderItems.reduce((sum, tender) => sum + (Number(tender.fileCount) || 0), 0);
-    const wrapper = section("Документы", total);
-    if (!total) {
-      wrapper.append(empty("Документы не переданы источником"));
+    const sourceTotal = tenders().reduce((sum, tender) => sum + (Number(tender.fileCount) || 0), 0);
+    const wrapper = section("Документы", documentsLoaded ? documentTotal : sourceTotal);
+    const toolbar = element("div", "procedure-document-toolbar");
+    const search = element("label", "procedure-document-search");
+    search.append(icon("search"));
+    const searchInput = document.createElement("input");
+    searchInput.type = "search";
+    searchInput.placeholder = "Поиск по документам";
+    searchInput.value = documentSearch;
+    searchInput.setAttribute("aria-label", "Поиск по документам");
+    searchInput.addEventListener("input", () => {
+      window.clearTimeout(documentSearchTimer);
+      documentSearchTimer = window.setTimeout(() => {
+        documentSearch = searchInput.value.trim();
+        loadDocuments(true);
+      }, 300);
+    });
+    search.append(searchInput);
+
+    const commands = element("div", "procedure-document-commands");
+    const syncButton = element("button", "procedure-document-command");
+    syncButton.type = "button";
+    syncButton.append(icon("refresh-cw"), element("span", null, "Синхронизировать"));
+    syncButton.disabled = documentsLoading;
+    syncButton.addEventListener("click", syncDocuments);
+
+    const uploadInput = document.createElement("input");
+    uploadInput.type = "file";
+    uploadInput.multiple = true;
+    uploadInput.hidden = true;
+    uploadInput.addEventListener("change", () => uploadDocuments(uploadInput.files));
+    const uploadButton = element("button", "procedure-document-command is-primary");
+    uploadButton.type = "button";
+    uploadButton.append(icon("upload"), element("span", null, "Загрузить"));
+    uploadButton.disabled = documentsLoading || documentCapabilities?.storageConfigured === false;
+    uploadButton.title = documentCapabilities?.storageConfigured === false
+      ? "Файловое хранилище пока не подключено"
+      : "Загрузить документы";
+    uploadButton.addEventListener("click", () => uploadInput.click());
+    commands.append(syncButton, uploadButton, uploadInput);
+    toolbar.append(search, commands);
+    wrapper.append(toolbar);
+
+    if (documentSummary) {
+      const summary = element("dl", "procedure-document-summary");
+      summary.append(
+        detailItem("Всего", documentSummary.total),
+        detailItem("Сохранено", documentSummary.stored),
+        detailItem("Обрабатывается", documentSummary.processing),
+        detailItem("Объём", formatBytes(documentSummary.storedBytes))
+      );
+      wrapper.append(summary);
+    }
+
+    if (documentMessage) wrapper.append(element("p", "procedure-document-message", documentMessage));
+    if (!documentsLoaded && !documentsLoading) {
+      queueMicrotask(() => loadDocuments(true));
+    }
+    if (documentsLoading && !documents.length) {
+      wrapper.append(element("p", "procedure-document-loading", "Загружаем документы"));
+      return wrapper;
+    }
+    if (documentsLoaded && !documents.length) {
+      wrapper.append(empty(documentSearch ? "Документы не найдены" : "Документов пока нет"));
       return wrapper;
     }
 
     const list = element("div", "procedure-document-list");
-    tenderItems.forEach((tender, index) => {
-      if (!Number(tender.fileCount)) return;
-      const row = element("div", "procedure-document-row");
-      const text = document.createElement("div");
-      text.append(element("h3", null, tender.lotName || tender.name || `Лот ${index + 1}`));
-      const fact = element("dl", "procedure-document-fact");
-      fact.append(detailItem("Файлов", tender.fileCount));
-      text.append(fact);
-      row.append(text);
-      if (procedure.sourceUrl) {
-        const link = element("a", "procedure-source-inline");
-        link.href = procedure.sourceUrl;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.append("Открыть источник", icon("external-link"));
-        row.append(link);
-      }
-      list.append(row);
-    });
+    documents.forEach((item) => list.append(renderDocumentRow(item)));
     wrapper.append(list);
+    if (documents.length < documentTotal) {
+      const more = element("button", "procedure-document-more", documentsLoading ? "Загрузка" : "Показать ещё");
+      more.type = "button";
+      more.disabled = documentsLoading;
+      more.addEventListener("click", () => loadDocuments(false));
+      wrapper.append(more);
+    }
     return wrapper;
   }
 
